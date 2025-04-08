@@ -1,10 +1,11 @@
 {
     "routes": [
-        {
-            "route": "/*",
-            "headers": {
-                "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
-            }
+      {
+        "route": "/*",
+        "headers": {
+          "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://cdn.spotparking.app data:"
         }
+      }
     ]
-}
+  }
+  
