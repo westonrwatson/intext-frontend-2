@@ -196,7 +196,7 @@ export const Home = () => {
                     onError={(e) => {
                         const target = e.target as HTMLImageElement
                         target.onerror = null
-                        target.src = 'https://blocks.astratic.com/img/general-img-portrait.png'
+                        target.src = "https://cdn.spotparking.app/public/posters/fallbackImage.jpg"
                     }}
                     className="w-full object-cover aspect-video object-top"
                     style={{}}
