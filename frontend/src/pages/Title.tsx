@@ -7,12 +7,30 @@ import { FaStar } from "react-icons/fa6";
 import { Tomato } from '../components/tomato';
 import { Imdb } from '../components/imdb';
 import { Title as MovieTitle } from '../components/Title';
+import { fetchData } from '../components/fetcher';
 
 const CHUNK_SIZE = 20;
 
 export const Title = () => {
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleID');
+
+    const getMovieData = async () => {
+        const response = await fetchData(`titles?show_id=${titleId}`);
+        const title = response[0];
+        const movieGenres = Object.keys(title).filter(key => genres.includes(key) && title[key] === '1')
+        const fullTitle = { ...title, genres: movieGenres }
+        return fullTitle;
+    };
+
+    useEffect(() => {
+        const fetchMovieData = async () => {
+            const movieData = await getMovieData();
+            setTitle(movieData);
+        };
+
+        fetchMovieData();
+    }, []);
 
     const [allMovies, setAllMovies] = useState<Title[]>([]);
     const [title, setTitle] = useState<Title | null>(null);
@@ -32,15 +50,6 @@ export const Title = () => {
 
             const sorted = parsed.data.sort((a, b) => a.title.localeCompare(b.title))
             setAllMovies(sorted)
-
-            // Find the selected title
-            if (titleId) {
-                const matched = sorted.find(movie => movie.show_id === titleId)
-                if (matched) {
-                    const movieGenres = Object.keys(matched).filter(key => genres.includes(key) && matched[key] === '1')
-                    setTitle({ ...matched, genres: movieGenres })
-                };
-            };
         };
 
         fetchData()
