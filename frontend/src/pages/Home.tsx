@@ -185,9 +185,9 @@ export const Home = () => {
                 <div className="flex flex-col items-center justify-center w-full overflow-hidden text-white gap-4 relative">
 
                     <div className='absolute top-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-6 z-20'>
-                        <p className='text-[60px] text-center text-shadow-lg font-bold text-white select-none'>Rediscover Film. Curated Classics,</p>
-                        <p className='text-[60px] text-center text-shadow-lg font-bold text-white select-none -mt-10'>Hidden Gems, Indie Gold.</p>
-                        <a href='/login' draggable={false} className='text-2xl text-white bg-[#503047] py-5 px-8 rounded-full font-light hover:bg-[#402639] transition cursor-pointer select-none'>Start Watching Now</a>
+                        <p className='text-[55px] text-center text-shadow-lg font-bold text-white select-none'>Rediscover Film. Curated Classics,</p>
+                        <p className='text-[55px] text-center text-shadow-lg font-bold text-white select-none -mt-10'>Hidden Gems, Indie Gold.</p>
+                        <a href='/sign-up' draggable={false} className='text-xl text-white bg-[#503047] py-4 px-9 rounded-full font-light hover:bg-[#402639] transition cursor-pointer select-none'>Start Watching Now</a>
                     </div>
 
                     <div className='w-fit flex rotate-[30deg] h-screen z-10'>
@@ -310,12 +310,14 @@ export const Home = () => {
                     <div className='w-full h-fit flex flex-col justify-center items-center gap-10 pb-10'>
                         <div className='flex flex-col gap-1 justify-center items-center py-6'>
                             <p className="text-4xl md:text-4xl select-none text-center pt-32 text-white w-full font-bold">Where You Can Watch</p>
+                            <div className="w-full max-w-6xl overflow-hidden">
                             <ScrollingIcons icons={[<TvIcons />, <TvIcons />, <TvIcons />, <TvIcons />, <TvIcons />]} />
+                            </div>
                         </div>
 
                         <div draggable={false} className='w-[90%] max-w-6xl h-64 bg-[#E9AF59] rounded-xl flex flex-col justify-center items-center gap-8'>
                             <p draggable={false} className="text-4xl md:text-5xl text-center text-white w-full font-semibold select-none">Join Free for 7 Days</p>
-                            <a href='/sign-up' draggable={false} className='text-2xl text-white bg-[#503047] py-5 px-8 rounded-full hover:bg-[#402639] transition cursor-pointer select-none'>Sign Up Now</a>
+                            <a href='/sign-up' draggable={false} className='text-xl text-white bg-[#503047] py-4 px-8 rounded-full hover:bg-[#402639] transition cursor-pointer select-none'>Sign Up Now</a>
                         </div>
                     </div>
 
