@@ -25,8 +25,8 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
     const HeaderLink = ({ icon, text, link }: { icon: any, text: string, link?: string }) => {
         if (!link) {
             return (
-                <div onClick={isLogginIn ? handleLogout : handleLogin} className="flex flex-row justify-center items-center hover:bg-zinc-800 group p-2 my-2 rounded gap-2 cursor-pointer transition">
-                    <div className="flex lg:hidden xl:flex">
+                <div onClick={isLogginIn ? handleLogout : handleLogin} className="flex flex-row justify-center items-center group p-2 my-2 rounded gap-2 cursor-pointer transition">
+                    <div className="flex lg:hidden xl:flex hover:text-shadow-lg">
                         {icon}
                     </div>
                     <div className="hidden lg:flex xl:flex group-hover:text-[#EA8C55] transition">
@@ -65,37 +65,49 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
         }
     ];
 
+    const loggedOutLinks = [
+        {
+            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] transition" />,
+            text: "Log In",
+            link: '',
+        }
+    ];
+
     const platform = navigator.userAgent.includes("Mac") ? "Mac" : navigator.userAgent.includes("Win") ? "Windows" : "Other";
 
     return (
-        <div className="bg-[#191919] fixed z-50 w-full border-y border-zinc-800 text-zinc-100 h-16 px-8 flex flex-row justify-between items-center">
-            <Link to="/">
+        <div className="bg-black/20 backdrop-blur-xl fixed z-50 w-full text-zinc-100 h-16 px-8 flex flex-row justify-between items-center">
+            <Link draggable={false} to="/">
                 <Logo />
             </Link>
 
             {/* Search Bar */}
-            <div
-                className="flex flex-col justify-center items-center absolute left-1/2 -translate-x-1/2 gap-2 w-1/3"
-                onClick={() => setSearchActive(true)}
-            >
-                <div
-                    className="w-full shadow-md border py-1 bg-zinc-300 rounded-2xl flex flex-col justify-start items-center"
-                    onClick={() => (ref as React.RefObject<HTMLInputElement>)?.current?.focus()}
-                >
-                    <div className="flex flex-row justify-center items-center gap-2 w-full px-2">
-                        <FiSearch size={18} className="text-stone-900" />
-                        <div className="w-full h-full bg-transparent outline-none text-zinc-500 text-ellipsis line-clamp-1">
-                            Search for movies, shows, and more
+            {
+                isLogginIn && (
+                    <div
+                        className="flex flex-col justify-center items-center absolute left-1/2 -translate-x-1/2 gap-2 w-1/3"
+                        onClick={() => setSearchActive(true)}
+                    >
+                        <div
+                            className="w-full shadow-md border py-1 bg-zinc-300 rounded-2xl flex flex-col justify-start items-center"
+                            onClick={() => (ref as React.RefObject<HTMLInputElement>)?.current?.focus()}
+                        >
+                            <div className="flex flex-row justify-center items-center gap-2 w-full px-2">
+                                <FiSearch size={18} className="text-stone-900" />
+                                <div className="w-full h-full bg-transparent outline-none text-zinc-500 text-ellipsis line-clamp-1">
+                                    Search for movies, shows, and more
+                                </div>
+                                <p className="flex flex-row justify-center items-center mr-2 gap-0 mt-[1px] w-fit text-zinc-500 text-xs">
+                                    {platform ? <LuCommand size={13} className="text-zinc-500" /> : "Ctrl"}+K
+                                </p>
+                            </div>
                         </div>
-                        <p className="flex flex-row justify-center items-center mr-2 gap-0 mt-[1px] w-fit text-zinc-500 text-xs">
-                            {platform ? <LuCommand size={13} className="text-zinc-500" /> : "Ctrl"}+K
-                        </p>
                     </div>
-                </div>
-            </div>
+                )
+            }
 
             <div className="flex flex-row justify-center items-center gap-2">
-                {headerLinks.map((link, index) => (
+                {(isLogginIn ? headerLinks : loggedOutLinks).map((link, index) => (
                     <HeaderLink
                         key={index}
                         icon={link.icon}
@@ -104,7 +116,7 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
                     />
                 ))}
             </div>
-        </div>
+        </div >
     );
 }
 );
