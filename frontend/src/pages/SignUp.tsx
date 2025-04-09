@@ -22,7 +22,7 @@ export const SignUp = () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:5173/callback'
+                redirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
             }
         });
 
@@ -41,7 +41,7 @@ export const SignUp = () => {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: 'http://localhost:5173/callback'
+                emailRedirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
             }
         })
 

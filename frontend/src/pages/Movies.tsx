@@ -28,7 +28,7 @@ export const Movies = () => {
 
         const underscore = selectedGenre.replace(/ /g, "_")
 
-        fetchData({ path: `titles?type=Movie&genre=${underscore}&count=500`, prod: false })
+        fetchData({ path: `titles?type=Movie&genre=${underscore}&count=500`, prod: true })
             .then(data => {
                 const sorted: Title[] = (data as Title[])
                     .filter((movie: Title) => movie.title?.trim())

@@ -17,7 +17,7 @@ export const Home = () => {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
 
     const getScrollingMovies = async () => {
-        const response = await fetchData({ path: 'titles?countOnly=true&count=150', prod: false })
+        const response = await fetchData({ path: 'titles?countOnly=true&count=150', prod: true })
         setAllScrollingMovies(response)
     };
 
@@ -100,7 +100,7 @@ export const Home = () => {
     const [recentlyAdded, setRecentlyAdded] = useState<Title | null>(null)
 
     const getRecentlyAdded = async () => {
-        const response = await fetchData({ path: 'titles?title=All American', prod: false })
+        const response = await fetchData({ path: 'titles?title=All American', prod: true })
         const titleGenres = Object.keys(response[0]).filter(key => genres.includes(key) && response[0][key] === '1')
         const title = {
             ...response[0],

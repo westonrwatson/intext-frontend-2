@@ -31,7 +31,7 @@ const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, should
     const [query, setQuery] = useState('')
 
     const getResults = async (query: string) => {
-        const response = await fetchData({ path: `search?q=${query}`, prod: false })
+        const response = await fetchData({ path: `search?q=${query}`, prod: true })
         return response
     };
 
