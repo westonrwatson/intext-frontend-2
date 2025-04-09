@@ -8,28 +8,13 @@ import React, {
 import { useNavigate } from 'react-router-dom'
 import { FiSearch } from 'react-icons/fi'
 import Fuse from 'fuse.js'
-import { SEARCH_INDEX } from './searchIndex'
-import Papa from 'papaparse'
-
-type Movie = {
-    show_id: string
-    type: string
-    title: string
-    director: string
-    cast: string
-    country: string
-    release_year: string
-    rating: string
-    duration: string
-    description: string
-    [key: string]: any
-}
+import { fetchData } from './fetcher'
 
 type SearchItem = {
     title: string
     path: string
-    keywords?: string[]
-    data?: any
+    type?: string
+    year?: number
 }
 
 type Props = {
@@ -38,94 +23,16 @@ type Props = {
     ref: ForwardedRef<HTMLInputElement>
 }
 
-
-
 const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, shouldHighlight }, ref) => {
     const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [fuse, setFuse] = useState<Fuse<SearchItem> | null>(null);
     const navigate = useNavigate();
+    const [query, setQuery] = useState('')
 
-    // TODO This crashes sometimes because it's too much to process.
-    // This will have to be fixed with backend queries (SQL)
-    useEffect(() => {
-        fetch('/movies_titles.csv')
-            .then((res) => res.text())
-            .then((csvText) => {
-                Papa.parse<Movie>(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (result) => {
-                        const raw = result.data.filter((row) => row.title?.trim())
-
-                        // Limit indexed items (you can increase later if stable)
-                        const sliced = raw.slice(0, 3000)
-
-                        const indexedMovies = sliced.map((movie) => ({
-                            title: `${movie.title}`,
-                            path: `/title?titleID=${movie.show_id}`,
-                            keywords: [
-                                movie.title?.toLowerCase(),
-                                movie.description?.toLowerCase(),
-                                movie.director?.toLowerCase(),
-                                movie.cast?.toLowerCase(),
-                                movie.country?.toLowerCase(),
-                                movie.release_year,
-                                movie.rating?.toLowerCase(),
-                                movie.duration?.toLowerCase(),
-                                ...Object.keys(movie)
-                                    .filter((key) => movie[key] === '1')
-                                    .map((genre) => genre.toLowerCase()),
-                            ].filter(Boolean), // only keep valid strings
-                            data: movie,
-                        }))
-
-                        const fullIndex = [...SEARCH_INDEX, ...indexedMovies]
-
-                        // Use "includeScore" for better sorting if needed
-                        const fuseInstance = new Fuse(fullIndex, {
-                            keys: ['title', 'keywords'],
-                            threshold: 0.3,
-                            minMatchCharLength: 2,
-                        })
-
-                        setFuse(fuseInstance)
-                    },
-                })
-            })
-    }, [])
-
-    function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): (...args: Parameters<T>) => void {
-        let timer: NodeJS.Timeout
-        return (...args: Parameters<T>) => {
-            clearTimeout(timer)
-            timer = setTimeout(() => fn(...args), delay)
-        }
-    }
-
-    const handleSearch = (query: string) => {
-        if (!query.trim() || !fuse) {
-            setSearchResults([])
-            setSelectedIndex(0)
-            return
-        }
-
-        const rawResults = fuse.search(query).slice(0, 50) // ✅ Limit to 50 results
-
-        const results = rawResults.map((result) => {
-            const item = result.item
-            const title = item?.title ?? ''
-
-            return {
-                ...item,
-                title: title.includes('~~') ? title.replace(/~~/g, ' ') : title,
-                data: item?.data ?? null,
-                path: item?.path ?? '/',
-            }
-        }).filter(item => item.title && item.path)
-
-        setSearchResults(results)
-        setSelectedIndex(0)
+    const getResults = async (query: string) => {
+        const response = await fetchData({ path: `search?q=${query}`, prod: false })
+        return response
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -156,8 +63,33 @@ const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, should
                 setTimeout(() => {
                     (ref as React.RefObject<HTMLInputElement>)?.current?.blur()
                 }, 0)
-            }
-    }
+            };
+    };
+
+    const handleSearchItemClick = useCallback((result: SearchItem) => {
+        navigate(result.path)
+        setSearchActive(false)
+        setSearchResults([])
+        setSelectedIndex(-1)
+            ; (ref as React.RefObject<HTMLInputElement>)?.current?.blur()
+    }, [navigate, setSearchActive, ref])
+
+    useEffect(() => {
+        if (!query) {
+            setSearchResults([])
+            setSelectedIndex(0)
+            return
+        };
+        if (query.length < 2) return
+        if (query.length > 20) return
+
+        const fetchResults = async () => {
+            const results = await getResults(query)
+            setSearchResults(results)
+        };
+
+        fetchResults()
+    }, [query])
 
     useEffect(() => {
         const selectedEl = document.querySelector(
@@ -174,23 +106,6 @@ const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, should
         }
     }, [shouldHighlight, ref])
 
-    const handleSearchItemClick = useCallback((result: SearchItem) => {
-        if (result?.title?.includes('~~')) {
-            const [type, _name] = result.title.split('~~')
-            if (type === 'Movie' && result.data) {
-                sessionStorage.setItem('selectedMovie', JSON.stringify(result.data))
-            };
-        };
-
-        navigate(result.path)
-        setSearchActive(false)
-        setSearchResults([])
-        setSelectedIndex(-1)
-            ; (ref as React.RefObject<HTMLInputElement>)?.current?.blur()
-    }, [navigate, setSearchActive, ref])
-
-    const debouncedSearch = useCallback(debounce(handleSearch, 200), [fuse])
-
     return (
         <div className="flex flex-col justify-center items-center absolute left-1/2 -translate-x-1/2 gap-2 w-1/2">
             <div
@@ -204,7 +119,7 @@ const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, should
                         placeholder={'Search for movies, shows, and more'}
                         className="w-full h-full bg-transparent outline-none text-black text-xl"
                         ref={ref}
-                        onChange={(e) => debouncedSearch(e.target.value)}
+                        onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={handleKeyDown}
                     />
                 </div>
@@ -231,14 +146,14 @@ const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, should
                                         <p className="text-sm font-medium text-black">
                                             {result.title}
                                         </p>
-                                        {result.data && (
+                                        {result && (
                                             <p className="text-xs font-normal text-stone-500">
-                                                ({result.data.release_year})
+                                                ({result.year})
                                             </p>
                                         )}
                                     </div>
                                     <p className="text-xs font-normal text-stone-500">
-                                        {result.data.type}
+                                        {result.type}
                                     </p>
                                 </div>
                             ))}

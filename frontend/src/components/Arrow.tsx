@@ -29,6 +29,7 @@ const Arrow: React.FC<ArrowProps> = () => {
     };
     return (
         <div
+            draggable={false}
             className={`absolute z-40 left-1/2 transform -translate-x-1/2 cursor-pointer flex justify-center items-center rounded-full hover:bg-gray-200/10 backdrop-blur-sm bottom-32 transition-all duration-700 ${arrow ? "opacity-100" : "opacity-0"
                 } ${pulse ? "animate-pulse" : ""}`}
             onClick={handleClick}

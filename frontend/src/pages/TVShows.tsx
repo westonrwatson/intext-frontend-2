@@ -1,9 +1,17 @@
-import Papa from 'papaparse'
 import { useEffect, useState, useRef, useMemo } from 'react'
 import { Title } from '../components/Title'
 import { genres } from '../utils/genres'
+import { fetchData } from '../components/fetcher'
 
 const CHUNK_SIZE = 40
+
+type Title = {
+    title: string
+    show_id: string
+    type: string
+    random_rating?: string
+    [key: string]: string | undefined
+}
 
 export const TVShows = () => {
     const [allMovies, setAllMovies] = useState<Title[]>([])
@@ -13,46 +21,24 @@ export const TVShows = () => {
     const [loading, setLoading] = useState(true)
     const loaderRef = useRef<HTMLDivElement>(null)
 
-    // Load CSV once
+    // Load movies from API on genre change
     useEffect(() => {
-        fetch('/movies_titles.csv')
-            .then(response => response.text())
-            .then(csvText => {
-                Papa.parse<Title>(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (result) => {
-                        const rows = result.data.filter(row => row.title?.trim() && row.type === 'TV Show')
-                        const sorted = rows.sort((a, b) => a.title.localeCompare(b.title))
-                        setAllMovies(sorted)
-                        setLoading(false)
-                    },
-                })
-            })
-    }, [])
-
-    // Extract available genres
-    const allGenres = useMemo(() => {
-        return allMovies.reduce((acc, movie) => {
-            const movieGenres = Object.keys(movie).filter(
-                key => genres.includes(key) && movie[key] === '1'
-            )
-            return [...acc, ...movieGenres]
-        }, [] as string[])
-            .filter((genre, index, self) => self.indexOf(genre) === index)
-            .sort((a, b) => a.localeCompare(b))
-    }, [allMovies])
-
-    // Filtered movies based on genre
-    const filteredMovies = useMemo(() => {
-        return allMovies.filter(movie => selectedGenre ? movie[selectedGenre] === '1' : true)
-    }, [allMovies, selectedGenre])
-
-    // Load initial chunk of visible movies on genre change
-    useEffect(() => {
+        setLoading(true)
         setScrollIndex(CHUNK_SIZE)
-        setVisibleMovies(filteredMovies.slice(0, CHUNK_SIZE))
-    }, [filteredMovies])
+
+        const underscore = selectedGenre.replace(/ /g, "_")
+
+        fetchData({ path: `titles?type=TV Show&genre=${underscore}&count=500`, prod: false })
+            .then(data => {
+                const sorted: Title[] = (data as Title[])
+                    .filter((movie: Title) => movie.title?.trim())
+                    .sort((a: Title, b: Title) => a.title.localeCompare(b.title))
+
+                setAllMovies(sorted)
+                setVisibleMovies(sorted.slice(0, CHUNK_SIZE))
+                setLoading(false)
+            })
+    }, [selectedGenre])
 
     // Lazy load more on scroll
     useEffect(() => {
@@ -73,19 +59,17 @@ export const TVShows = () => {
 
         observer.observe(loaderRef.current)
         return () => observer.disconnect()
-    }, [scrollIndex, filteredMovies])
+    }, [scrollIndex, allMovies])
 
     const loadMore = () => {
-        const nextChunk = filteredMovies.slice(scrollIndex, scrollIndex + CHUNK_SIZE)
+        const nextChunk = allMovies.slice(scrollIndex, scrollIndex + CHUNK_SIZE)
         if (nextChunk.length === 0) return
         setVisibleMovies(prev => [...prev, ...nextChunk])
         setScrollIndex(prev => prev + CHUNK_SIZE)
-    };
-
-    console.log(`Selected genre: ${selectedGenre}`)
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center bg-[#191919] no-scrollbar w-full gap-10 mt-10">
+        <div className="flex flex-col items-center min-h-screen justify-center bg-[#191919] no-scrollbar w-full gap-10 mt-10 py-20">
             <p className='font-semibold text-4xl -mt-5 -mb-5 text-shadow-lg text-white'>TV Shows</p>
 
             {loading && (
@@ -96,7 +80,7 @@ export const TVShows = () => {
 
             <div className="w-screen relative overflow-hidden pb-2 pt-2">
                 <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
-                    {allGenres.map((genre, index) => (
+                    {genres.map((genre, index) => (
                         <div
                             key={index}
                             onClick={() => setSelectedGenre(genre)}
@@ -109,7 +93,6 @@ export const TVShows = () => {
                     ))}
                 </div>
 
-                {/* Side gradients */}
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-8 bg-gradient-to-r from-[#191919] to-transparent z-10" />
                 <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#191919] to-transparent z-10" />
             </div>

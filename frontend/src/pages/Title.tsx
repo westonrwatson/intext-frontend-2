@@ -9,8 +9,12 @@ import { fetchData, postData } from '../components/fetcher';
 import { Section } from '../components/Section';
 
 export const Title = () => {
+    const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
+    const [title, setTitle] = useState<Title | null>(null);
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleID');
+    const numFullStar = parseInt(title?.random_rating ?? '0');
+    const numEmptyStar = 5 - numFullStar;
 
     const getMovieData = async () => {
         const response = await fetchData({ path: `titles?show_id=${titleId}` });
@@ -25,7 +29,12 @@ export const Title = () => {
         return response;
     };
 
-    const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
+    const getDurationFromMinutes = (minutes: string) => {
+        const parsedMinutes = parseInt(minutes);
+        const hours = Math.floor(parsedMinutes / 60);
+        const minutesLeft = parsedMinutes % 60;
+        return `${hours}h ${minutesLeft}m`;
+    };
 
     useEffect(() => {
         const fetchMovieData = async () => {
@@ -52,20 +61,8 @@ export const Title = () => {
         fetchMovieData();
     }, []);
 
-    const [title, setTitle] = useState<Title | null>(null);
-
-    const numFullStar = parseInt(title?.random_rating ?? '0');
-    const numEmptyStar = 5 - numFullStar;
-
-    const getDurationFromMinutes = (minutes: string) => {
-        const parsedMinutes = parseInt(minutes);
-        const hours = Math.floor(parsedMinutes / 60);
-        const minutesLeft = parsedMinutes % 60;
-        return `${hours}h ${minutesLeft}m`;
-    };
-
     return (
-        <div className="flex flex-col gap-4 justify-start min-h-screen items-center w-full bg-[#191919] text-white text-sm p-4 z-50 no-scrollbar overflow-auto">
+        <div className="flex flex-col gap-4 justify-start min-h-screen items-center w-full py-20 bg-[#191919] text-white text-sm p-4 z-50 no-scrollbar overflow-auto">
             <div className="flex flex-col items-start justify-center w-full h-[calc(80%-20px)] overflow-auto text-white gap-4 relative rounded-xl mt-2 no-scrollbar">
                 <img
                     src={`https://cdn.spotparking.app/public/posters/${title?.title}.jpg`}

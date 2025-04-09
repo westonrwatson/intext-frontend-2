@@ -2,7 +2,7 @@ import './ScrollColumn.css' // we'll create this next
 import { Title } from './Title'
 
 type Props = {
-    items: object[]
+    items: string[]
     direction?: 'up' | 'down'
 }
 
@@ -14,7 +14,7 @@ export const ScrollColumn = ({ items, direction = 'down' }: Props) => {
         <div className="scroll-container">
             <div className={`scroll-content ${animationClass}`}>
                 {[...items, ...items].map((item: any, index) => (
-                    <Title movie={item} full={false} />
+                    <Title key={`${item.show_id}-${index}`} title={item} full={false} />
                 ))}
             </div>
         </div>
