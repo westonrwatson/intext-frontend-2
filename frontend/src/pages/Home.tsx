@@ -100,7 +100,7 @@ export const Home = () => {
     const [recentlyAdded, setRecentlyAdded] = useState<Title | null>(null)
 
     const getRecentlyAdded = async () => {
-        const response = await fetchData({ path: 'singleTitle?title=All American', prod: false })
+        const response = await fetchData({ path: 'singleTitle?title=All American', prod: true })
 
         if (response) {
             const titleGenres = Object.keys(response).filter(key =>
