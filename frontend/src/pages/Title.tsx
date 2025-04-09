@@ -1,98 +1,58 @@
-import Papa from 'papaparse';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaPlay } from "react-icons/fa";
 import { genres } from '../utils/genres';
 import { FaHeart } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
 import { Tomato } from '../components/tomato';
 import { Imdb } from '../components/imdb';
-import { Title as MovieTitle } from '../components/Title';
-import { fetchData } from '../components/fetcher';
-
-const CHUNK_SIZE = 20;
+import { fetchData, postData } from '../components/fetcher';
+import { Section } from '../components/Section';
 
 export const Title = () => {
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleID');
 
     const getMovieData = async () => {
-        const response = await fetchData(`titles?show_id=${titleId}`);
+        const response = await fetchData({ path: `titles?show_id=${titleId}` });
         const title = response[0];
         const movieGenres = Object.keys(title).filter(key => genres.includes(key) && title[key] === '1')
         const fullTitle = { ...title, genres: movieGenres }
         return fullTitle;
     };
 
+    const getSimilarMovies = async (title: Title) => {
+        const response = await fetchData({ path: `similar-movies?title=${title.title}` });
+        return response;
+    };
+
+    const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
+
     useEffect(() => {
         const fetchMovieData = async () => {
             const movieData = await getMovieData();
             setTitle(movieData);
+
+            const similarMovies = await getSimilarMovies(movieData);
+
+            const query = Object.entries(similarMovies)
+                .filter(([key]) => key !== "title") // Exclude the original title
+                .map(([, value]) => value as string)
+
+            const payload = { titles: query }
+
+            const response = await postData({
+                path: 'titles',
+                body: payload,
+                prod: true
+            });
+
+            setRecommendedTitles(response);
         };
 
         fetchMovieData();
     }, []);
 
-    const [allMovies, setAllMovies] = useState<Title[]>([]);
     const [title, setTitle] = useState<Title | null>(null);
-    const [visibleMovies, setVisibleMovies] = useState<Title[]>([]);
-    const [scrollIndex, setScrollIndex] = useState(CHUNK_SIZE);
-    const loaderRef = useRef<HTMLDivElement>(null);
-
-    // Fetch and parse CSV only once
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch('/movies_titles.csv')
-            const csvText = await response.text()
-            const parsed = Papa.parse<Title>(csvText, {
-                header: true,
-                skipEmptyLines: true,
-            })
-
-            const sorted = parsed.data.sort((a, b) => a.title.localeCompare(b.title))
-            setAllMovies(sorted)
-        };
-
-        fetchData()
-    }, [titleId]);
-
-    // Filter based on title type
-    const filteredMovies = useMemo(() => {
-        return allMovies.filter(movie => movie.type === title?.type)
-    }, [allMovies, title]);
-
-    // Load initial visible chunk
-    useEffect(() => {
-        setScrollIndex(CHUNK_SIZE)
-        setVisibleMovies(filteredMovies.slice(0, CHUNK_SIZE))
-    }, [filteredMovies]);
-
-    // Lazy loading
-    useEffect(() => {
-        if (!loaderRef.current) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMore()
-                }
-            },
-            {
-                root: null,
-                rootMargin: '0px',
-                threshold: 1.0,
-            }
-        );
-
-        observer.observe(loaderRef.current)
-        return () => observer.disconnect()
-    }, [scrollIndex, filteredMovies]);
-
-    const loadMore = () => {
-        const nextChunk = filteredMovies.slice(scrollIndex, scrollIndex + CHUNK_SIZE);
-        if (nextChunk.length === 0) return;
-        setVisibleMovies(prev => [...prev, ...nextChunk]);
-        setScrollIndex(prev => prev + CHUNK_SIZE);
-    };
 
     const numFullStar = parseInt(title?.random_rating ?? '0');
     const numEmptyStar = 5 - numFullStar;
@@ -182,18 +142,10 @@ export const Title = () => {
                 <div className="pointer-events-none absolute right-0 bottom-0 h-48 w-full z-10 bg-gradient-to-t from-[#191919] to-transparent" />
             </div>
 
-            <div className='flex flex-col items-start justify-center w-full h-fit overflow-auto text-white gap-4 relative rounded-xl mt-10 px-10 no-scrollbar'>
-                <p className='font-semibold text-4xl text-shadow-lg text-white pl-2'>Suggested</p>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 w-full mt-4">
-                    {visibleMovies.map((movie, index) => (
-                        <div key={index} className="flex items-center justify-center">
-                            <MovieTitle movie={movie} />
-                        </div>
-                    ))}
-                    <div ref={loaderRef} className="w-[2px] h-full bg-transparent" />
-                    <div className="pointer-events-none fixed bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#191919] to-transparent z-10" />
-                </div>
-            </div>
+            <Section
+                title='More Like This'
+                movies={recommendedTitles}
+            />
         </div >
     );
 };
