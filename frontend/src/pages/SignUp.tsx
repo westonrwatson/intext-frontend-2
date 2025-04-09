@@ -15,7 +15,7 @@ export const SignUp = () => {
     };
 
     const validatePassword = (password: string) => {
-        return password.length >= 8
+        return password.length >= 12
     };
 
     'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
@@ -75,7 +75,7 @@ export const SignUp = () => {
         };
 
         if (!validatePassword(password)) {
-            setErrorMessage('Password must be at least 8 characters long')
+            setErrorMessage('Password must be at least 12 characters long')
             return
         };
 
