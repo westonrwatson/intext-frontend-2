@@ -4,7 +4,10 @@ const PROD_URL = 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const fetchData = async ({ path, prod = true }: { path: string, prod?: boolean }): Promise<any> => {
-    const response = await fetch(`${prod ? PROD_URL : DEV_URL}${path}`, {
+    const fullPath = `${prod ? PROD_URL : DEV_URL}${path}`
+    console.log(fullPath);
+    console.log(`API_KEY: ${API_KEY}`);
+    const response = await fetch(fullPath, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

@@ -18,11 +18,13 @@ export const SignUp = () => {
         return password.length >= 8
     };
 
+    'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+
     const handleGoogleSignIn = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+                redirectTo: 'http://localhost:5173/callback'
             }
         });
 
@@ -41,17 +43,11 @@ export const SignUp = () => {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+                emailRedirectTo: 'http://localhost:5173/callback'
             }
         })
 
-        console.log(data, error)
-
-        const token = (await supabase.auth.getSession()).data.session?.access_token
-
-        console.log(token)
-
-        if (token) {
+        if (data.user) {
             setGoConfirm(true)
             return;
         }

@@ -100,76 +100,85 @@ export const Home = () => {
     const [recentlyAdded, setRecentlyAdded] = useState<Title | null>(null)
 
     const getRecentlyAdded = async () => {
-        const response = await fetchData({ path: 'titles?title=All American', prod: true })
-        const titleGenres = Object.keys(response[0]).filter(key => genres.includes(key) && response[0][key] === '1')
-        const title = {
-            ...response[0],
-            genres: titleGenres,
+        const response = await fetchData({ path: 'singleTitle?title=All American', prod: false })
+
+        if (response) {
+            const titleGenres = Object.keys(response).filter(key =>
+                genres.includes(key) && response[key] === 1
+            )
+
+            const title = {
+                ...response,
+                genres: titleGenres,
+            }
+            setRecentlyAdded(title)
+        } else {
+            console.error("❌ No data found from singleTitle")
         }
-
-        setRecentlyAdded(title)
-    };
-
+    }
     useEffect(() => {
         getRecentlyAdded()
     }, [])
 
     if (isLoggedIn) {
-        <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
-            <div className="flex flex-col items-start justify-center w-full h-[calc(80%-20px)] overflow-clip text-white gap-4 relative">
-                <img
-                    src={`https://cdn.spotparking.app/public/posters/All American.jpg`}
-                    alt={'All American'}
-                    onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.onerror = null
-                        target.src = "https://cdn.spotparking.app/public/posters/fallbackImage.jpg"
-                    }}
-                    className="w-full object-cover aspect-video object-top"
-                    style={{}}
-                />
-                <div className='absolute bottom-20 left-20 flex flex-col gap-3 z-10'>
-                    <p className='font-light text-2xl text-white'>Recently Added</p>
-                    <p className='font-semibold text-6xl text-shadow-lg'>{recentlyAdded?.title}</p>
-                    <p className='font-light text-md text-gray-200 text-shadow-lg'>{recentlyAdded?.genres.join(", ")}</p>
+        return (
+            <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
+                <div className="flex flex-col items-start justify-center w-full h-[calc(80%-20px)] overflow-clip text-white gap-4 relative">
+                    <img
+                        src={`https://cdn.spotparking.app/public/posters/All American.jpg`}
+                        alt={'All American'}
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.onerror = null
+                            target.src = "https://cdn.spotparking.app/public/posters/fallbackImage.jpg"
+                        }}
+                        className="w-full object-cover aspect-video object-top"
+                    />
+                    {recentlyAdded && (
+                        <div className='absolute bottom-20 left-20 flex flex-col gap-3 z-10'>
+                            <p className='font-light text-2xl text-white'>Recently Added</p>
+                            <p className='font-semibold text-6xl text-shadow-lg'>{recentlyAdded?.title}</p>
+                            <p className='font-light text-md text-gray-200 text-shadow-lg'>{recentlyAdded?.genres.join(", ")}</p>
 
-                    <div className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 py-2 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
-                        <div className='bg-[#AF6A42] group-hover:bg-[#8C5433] rounded-full w-8 h-8 flex justify-center items-center'>
-                            <FaPlay size={16} className="text-zinc-100" />
+                            <div className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 py-2 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
+                                <div className='bg-[#AF6A42] group-hover:bg-[#8C5433] rounded-full w-8 h-8 flex justify-center items-center'>
+                                    <FaPlay size={16} className="text-zinc-100" />
+                                </div>
+                                <p className='group-hover:text-gray-100 pr-1'>Play Now</p>
+                            </div>
                         </div>
-                        <p className='group-hover:text-gray-100 pr-1'>Play Now</p>
+                    )}
+                    <div className="pointer-events-none absolute top-0 left-0 h-full w-full opacity-50 bg-gradient-to-r from-[#191919] to-transparent z-0" />
+                    <div className="pointer-events-none absolute right-0 bottom-0 h-48 w-full bg-gradient-to-t from-[#191919] to-transparent" />
+                </div>
+
+                <Section movies={allMovies} title="You May Like..." />
+                <Section movies={allMovies} title="Recommended" />
+
+                <div className="w-screen relative overflow-hidden bg-[#050505] pb-10 pt-6 shadow-lg">
+                    <h2 className="text-2xl text-zinc-100 font-bold mb-4 px-8">Genres</h2>
+
+                    {/* Scrollable grid with 2 rows */}
+                    <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
+                        {allGenres.map((genre, index) => (
+                            <div
+                                key={index}
+                                className="bg-[#383838] text-white px-6 py-8 rounded-lg text-center min-w-[150px] flex hover:bg-[#191919] items-center justify-center text-xl max-w-96 cursor-pointer text-wrap transition"
+                            >
+                                {genre}
+                            </div>
+                        ))}
                     </div>
-                </div>
-                <div className="pointer-events-none absolute top-0 left-0 h-full w-full opacity-50 bg-gradient-to-r from-[#191919] to-transparent z-0" />
-                <div className="pointer-events-none absolute right-0 bottom-0 h-48 w-full bg-gradient-to-t from-[#191919] to-transparent" />
-            </div>
 
-            <Section movies={allMovies} title="You May Like..." />
-            <Section movies={allMovies} title="Recommended" />
-
-            <div className="w-screen relative overflow-hidden bg-[#050505] pb-10 pt-6 shadow-lg">
-                <h2 className="text-2xl text-zinc-100 font-bold mb-4 px-8">Genres</h2>
-
-                {/* Scrollable grid with 2 rows */}
-                <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
-                    {allGenres.map((genre, index) => (
-                        <div
-                            key={index}
-                            className="bg-[#383838] text-white px-6 py-8 rounded-lg text-center min-w-[150px] flex hover:bg-[#191919] items-center justify-center text-xl max-w-96 cursor-pointer text-wrap transition"
-                        >
-                            {genre}
-                        </div>
-                    ))}
+                    {/* Right fade */}
+                    <div className="pointer-events-none absolute left-0 top-0 h-full w-8 bg-gradient-to-r from-[#050505] to-transparent z-10" />
+                    <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#050505] to-transparent z-10" />
                 </div>
 
-                {/* Right fade */}
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-8 bg-gradient-to-r from-[#050505] to-transparent z-10" />
-                <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#050505] to-transparent z-10" />
+                <Section movies={allMovies} title="Popular TV Shows" />
+                <Section movies={allMovies} title="Horror" />
             </div>
-
-            <Section movies={allMovies} title="Popular TV Shows" />
-            <Section movies={allMovies} title="Horror" />
-        </div>
+        )
     } else {
         return (
             <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">

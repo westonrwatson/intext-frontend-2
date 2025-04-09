@@ -26,9 +26,9 @@ export const AppContent = () => {
     const searchWrapperRef = useRef<HTMLDivElement | null>(null);
     const searchInputRef = useRef<HTMLInputElement | null>(null);
     const [highlightSearchInput, setHighlightSearchInput] = useState(false);
+    const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
     const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-        const isLoggedIn = useAuthStore(state => state.isLoggedIn);
         return isLoggedIn ? children : <Navigate to="/login" replace />;
     };
 

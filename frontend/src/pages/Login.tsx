@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { postData } from "../components/fetcher";
-import { createClient } from '@supabase/supabase-js'
 import { supabase } from "../utils/supabase";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../utils/useAuthStore";
+
+const API_KEY = import.meta.env.VITE_API_KEY
 
 export const Login = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const navigate = useNavigate()
+    const setLogin = useAuthStore((state) => state.setLoggedIn);
 
     const validateEmail = (email: string) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -20,17 +24,33 @@ export const Login = () => {
     const validateLogin = async (email: string, password: string) => {
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
-            password: password
+            password: password,
         })
 
-        const response = postData({
-            path: 'auth',
-            body: {
-                email: email,
-                password: password
+        if (data.user) {
+            // Check database
+
+            const response = await fetch('http://localhost:5016/check-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': API_KEY,
+                },
+                body: JSON.stringify({ email: data.session.user.email })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        })
-        console.log(response)
+
+            const responseData = await response.json();
+            console.log('Response from API:', responseData);
+
+            if (responseData.exists) {
+                setLogin(true)
+                navigate('/')
+            };
+        };
     };
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -52,7 +72,7 @@ export const Login = () => {
         };
 
         // Perform login logic here
-        // validateLogin(email, password)
+        validateLogin(email, password)
     };
 
     return (
