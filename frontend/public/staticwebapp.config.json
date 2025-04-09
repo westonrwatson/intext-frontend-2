@@ -1,8 +1,6 @@
-// updated
-
 {
     "globalHeaders": {
-      "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data:; connect-src *"
+      "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://cdn.spotparking.app https://img.icons8.com data:; connect-src 'self' https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net https://*.supabase.co"
     },
     "navigationFallback": {
       "rewrite": "index.html"
