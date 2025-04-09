@@ -21,7 +21,7 @@ export const fetchData = async ({ path, prod = true }: { path: string, prod?: bo
 };
 
 export const fetchAllData = async (paths: Record<string, string>): Promise<Record<string, any>> => {
-    const results = await Promise.all(Object.values(paths).map((path) => fetchData({ path, prod: true })));
+    const results = await Promise.all(Object.values(paths).map((path) => fetchData({ path })));
 
     const output: Record<string, any> = {};
     Object.keys(paths).forEach((key, index) => {
@@ -31,7 +31,7 @@ export const fetchAllData = async (paths: Record<string, string>): Promise<Recor
     return output;
 };
 
-export const postData = async ({ path, body, prod = false }: {
+export const postData = async ({ path, body, prod = true }: {
     path: string,
     body: object,
     prod?: boolean,

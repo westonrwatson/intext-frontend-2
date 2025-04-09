@@ -7,4 +7,11 @@
     "content": [
         "./src/**/*.{js,ts,jsx,tsx}", // or wherever your files are
     ],
+    "compilerOptions": {
+        "lib": ["es6", "dom"],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "allowSyntheticDefaultImports": true
+    }
 }

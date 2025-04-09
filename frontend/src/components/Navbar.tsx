@@ -6,11 +6,13 @@ import { LuCommand } from "react-icons/lu";
 import { TbMovie } from "react-icons/tb";
 import { Logo } from "./logo";
 import { LuLogOut } from "react-icons/lu";
+import { BsFillPersonFill } from "react-icons/bs";
 import { useAuthStore } from "../utils/useAuthStore";
 
 export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: boolean) => void }>(({ setSearchActive }, ref) => {
     const setLogin = useAuthStore((state) => state.setLoggedIn);
     const isLogginIn = useAuthStore((state) => state.isLoggedIn);
+    const isAdmin = useAuthStore((state) => state.isAdmin);
     const handleLogout = () => {
         sessionStorage.clear();
         localStorage.clear();
@@ -62,7 +64,29 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
         {
             icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] transition" />,
             text: "Log Out",
-        }
+        },
+    ];
+
+    const adminLinks = [
+        {
+            icon: <FiTv className="text-zinc-100" />,
+            text: "Tv Shows",
+            link: "/tv-shows"
+        },
+        {
+            icon: <TbMovie size={20} className="text-zinc-100" />,
+            text: "Movies",
+            link: "/movies"
+        },
+        {
+            icon: <BsFillPersonFill size={19} className="text-zinc-100" />,
+            text: "Admin",
+            link: "/admin"
+        },
+        {
+            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] transition" />,
+            text: "Log Out",
+        },
     ];
 
     const loggedOutLinks = [
@@ -85,11 +109,11 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
             {
                 isLogginIn && (
                     <div
-                        className="flex flex-col justify-center items-center absolute left-1/2 -translate-x-1/2 gap-2 w-1/3"
+                        className={`flex flex-col justify-center items-center absolute left-1/2 -translate-x-1/2 gap-2 w-1/3`}
                         onClick={() => setSearchActive(true)}
                     >
                         <div
-                            className="w-full shadow-md border py-1 bg-zinc-300 rounded-2xl flex flex-col justify-start items-center"
+                            className={`w-full shadow-md border py-1 bg-zinc-300 rounded-2xl flex flex-col justify-start items-center  ${isAdmin && 'mr-32'}`}
                             onClick={() => (ref as React.RefObject<HTMLInputElement>)?.current?.focus()}
                         >
                             <div className="flex flex-row justify-center items-center gap-2 w-full px-2">
@@ -107,7 +131,7 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
             }
 
             <div className="flex flex-row justify-center items-center gap-2">
-                {(isLogginIn ? headerLinks : loggedOutLinks).map((link, index) => (
+                {(isLogginIn ? isAdmin ? adminLinks : headerLinks : loggedOutLinks).map((link, index) => (
                     <HeaderLink
                         key={index}
                         icon={link.icon}

@@ -4,7 +4,9 @@ import { persist } from 'zustand/middleware'
 
 type AuthStore = {
     isLoggedIn: boolean
+    isAdmin: boolean
     setLoggedIn: (val: boolean) => void
+    setAdmin: (val: boolean) => void
     logout: () => void
 }
 
@@ -12,8 +14,10 @@ export const useAuthStore = create<AuthStore>()(
     persist(
         (set) => ({
             isLoggedIn: false,
+            isAdmin: false,
             setLoggedIn: (val) => set({ isLoggedIn: val }),
-            logout: () => set({ isLoggedIn: false }),
+            setAdmin: (val) => set({ isAdmin: val }),
+            logout: () => set({ isLoggedIn: false, isAdmin: false }),
         }),
         {
             name: 'auth-storage', // Key in localStorage

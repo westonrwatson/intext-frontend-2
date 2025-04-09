@@ -51,8 +51,7 @@ export const Title = () => {
 
             const response = await postData({
                 path: 'titles',
-                body: payload,
-                prod: true
+                body: payload
             });
 
             setRecommendedTitles(response);

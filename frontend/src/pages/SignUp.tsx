@@ -24,7 +24,7 @@ export const SignUp = () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:5173/callback'
+                redirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
             }
         });
 
@@ -43,7 +43,7 @@ export const SignUp = () => {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: 'http://localhost:5173/callback'
+                emailRedirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
             }
         })
 
@@ -96,26 +96,28 @@ export const SignUp = () => {
 
                         <div className="space-y-4 flex flex-col justify-center items-center w-full">
                             <div className="flex flex-col w-full justify-center items-center gap-4">
-                                <input
-                                    type="text"
-                                    placeholder="First Name"
-                                    value={firstName}
-                                    onChange={(e) => {
-                                        setErrorMessage(null)
-                                        setFirstName(e.target.value)
-                                    }}
-                                    className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Last Name"
-                                    value={lastName}
-                                    onChange={(e) => {
-                                        setErrorMessage(null)
-                                        setLastName(e.target.value)
-                                    }}
-                                    className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
-                                />
+                                <div className="w-full max-w-[400px] flex flex-row justify-between items-center gap-4">
+                                    <input
+                                        type="text"
+                                        placeholder="First Name"
+                                        value={firstName}
+                                        onChange={(e) => {
+                                            setErrorMessage(null)
+                                            setFirstName(e.target.value)
+                                        }}
+                                        className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Last Name"
+                                        value={lastName}
+                                        onChange={(e) => {
+                                            setErrorMessage(null)
+                                            setLastName(e.target.value)
+                                        }}
+                                        className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                                    />
+                                </div>
                                 <input
                                     type="email"
                                     placeholder="Email"

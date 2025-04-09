@@ -17,6 +17,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuthStore } from './utils/useAuthStore';
 import React from 'react';
 import Callback from './pages/Callback';
+import Admin from './pages/Admin';
 
 export const AppContent = () => {
     const location = useLocation();
@@ -30,6 +31,11 @@ export const AppContent = () => {
 
     const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         return isLoggedIn ? children : <Navigate to="/login" replace />;
+    };
+
+    const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+        const isAdmin = useAuthStore(state => state.isAdmin);
+        return isAdmin ? children : <Navigate to="/" replace />;
     };
 
     const handleClickOutside = (e: any) => {
@@ -124,8 +130,8 @@ export const AppContent = () => {
                     <Route path="/title" element={
                         <ProtectedRoute><Title /></ProtectedRoute>
                     } />
-                    <Route path="/account" element={
-                        <ProtectedRoute><Account /></ProtectedRoute>
+                    <Route path="/admin" element={
+                        <ProtectedRoute><AdminRoute><Admin /></AdminRoute></ProtectedRoute>
                     } />
                 </Routes>
 

@@ -11,6 +11,7 @@ export const Login = () => {
     const [password, setPassword] = useState<string>("")
     const navigate = useNavigate()
     const setLogin = useAuthStore((state) => state.setLoggedIn);
+    const setAdmin = useAuthStore((state) => state.setAdmin);
 
     const validateEmail = (email: string) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -30,7 +31,7 @@ export const Login = () => {
         if (data.user) {
             // Check database
 
-            const response = await fetch('http://localhost:5016/check-user', {
+            const response = await fetch('https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/check-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +47,14 @@ export const Login = () => {
             const responseData = await response.json();
             console.log('Response from API:', responseData);
 
+            console.log(responseData)
+
             if (responseData.exists) {
+                if (responseData.admin === true) {
+                    setAdmin(true)
+                } else {
+                    setAdmin(false)
+                }
                 setLogin(true)
                 navigate('/')
             };
