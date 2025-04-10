@@ -42,7 +42,7 @@ export const Login = () => {
         }
 
         try {
-            const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
+            const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
             const response = await fetch(`${url}check-user`, {
                 method: 'POST',
                 headers: {
@@ -98,7 +98,7 @@ export const Login = () => {
 
     const handleGoogleSignIn = async () => {
 
-        const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5173'}`;
+        const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net' : 'http://localhost:5173'}`;
 
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',

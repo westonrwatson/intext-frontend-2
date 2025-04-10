@@ -21,7 +21,7 @@ export const SignUp = () => {
         return password.length >= 12
     };
 
-    const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5173/'}`;
+    const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/' : 'http://localhost:5173/'}`;
 
     const handleGoogleSignIn = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({

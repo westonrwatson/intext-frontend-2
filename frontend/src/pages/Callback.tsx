@@ -28,7 +28,7 @@ export default function Callback() {
                 name = `${data.session.user.user_metadata.first_name} ${data.session.user.user_metadata.last_name}`;
             };
 
-            const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
+            const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
 
             const response = await fetch(`${url}auth`, {
                 method: 'POST',

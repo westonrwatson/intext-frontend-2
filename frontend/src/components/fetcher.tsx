@@ -1,5 +1,5 @@
 const DEV_URL = 'http://127.0.0.1:5016/';
-const PROD_URL = 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net';
+const PROD_URL = 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/';
 const IS_PROD = import.meta.env.MODE === 'production';
 
 export const fetchData = async ({ path }: { path: string; prod?: boolean }): Promise<any> => {
