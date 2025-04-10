@@ -9,7 +9,7 @@ import { ScrollingIcons } from '../components/ScrollingIcons';
 import { TvIcons } from '../components/tvIcons';
 import Arrow from '../components/Arrow';
 import { Section } from '../components/Section';
-import { fetchData } from '../components/fetcher';
+import { fetchData, postData } from '../components/fetcher';
 
 export const Home = () => {
     const [allMovies, setAllMovies] = useState<Title[]>([])
@@ -120,6 +120,87 @@ export const Home = () => {
         getRecentlyAdded()
     }, [])
 
+
+    const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
+    const [list1, setList1] = useState<Title[]>([]); // Thrillers
+    const [list2, setList2] = useState<Title[]>([]); // Comedies
+    const [list3, setList3] = useState<Title[]>([]); // Dramas
+    const [list4, setList4] = useState<Title[]>([]); // Horror Movies
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('user_id') || "1"; // fallback default if needed
+
+    const getUserRecommendations = async (userId: string) => {
+        const response = await fetchData({ path: `user-recommendations?user_id=${userId}&genre=Thrillers&genre=Comedies&genre=Dramas&genre=Horror%20Movies` });
+        return response;
+    };
+
+    const getAllUserRecommendations = async (userId: string) => {
+        const response = await fetchData({ path: `user-recommendations?user_id=${userId}` });
+        return response;
+    };
+
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            try {
+                if (!userId) {
+                    console.warn("⚠️ No userId provided in URL.");
+                    return;
+                }
+    
+                // Step 1: Fetch raw recommendations for user
+                const recommendations = await getUserRecommendations(userId);
+                const allRecommendations = await getAllUserRecommendations(userId);
+    
+                if (!Array.isArray(recommendations)) {
+                    console.error("❌ Invalid response format for recommendations:", recommendations);
+                    return;
+                }
+    
+                // Step 2: Deduplicate by show_id
+                const seen = new Set();
+                const uniqueRecommendations = recommendations.filter((rec: any) => {
+                    if (seen.has(rec.show_id)) return false;
+                    seen.add(rec.show_id);
+                    return true;
+                });
+
+                const seen2 = new Set();
+                const uniqueRecommendations2 = allRecommendations.filter((rec: any) => {
+                    if (seen2.has(rec.show_id)) return false;
+                    seen2.add(rec.show_id);
+                    return true;
+                });
+
+                const thrillerList = [] as Title[];
+                const comedyList = [] as Title[];
+                const dramaList = [] as Title[];
+                const horrorList = [] as Title[];
+
+                uniqueRecommendations.forEach((rec: any) => {
+                    if (rec.genre === 'Thrillers') {
+                        thrillerList.push(rec);
+                    } else if (rec.genre === 'Comedies') {
+                        comedyList.push(rec);
+                    } else if (rec.genre === 'Dramas') {
+                        dramaList.push(rec);
+                    } else if (rec.genre === 'Horror Movies') {
+                        horrorList.push(rec);
+                    }
+                });
+
+                setList1(thrillerList);
+                setList2(comedyList);
+                setList3(dramaList);
+                setList4(horrorList);
+                setRecommendedTitles(uniqueRecommendations2);
+            } catch (err) {
+                console.error("🚨 Failed to fetch recommendations:", err);
+            }
+        };
+    
+        fetchRecommendations();
+    }, [userId]);
+    
     if (isLoggedIn) {
         return (
             <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
@@ -135,7 +216,7 @@ export const Home = () => {
                         className="w-full object-cover aspect-video object-top"
                     />
                     {recentlyAdded && (
-                        <div className='absolute bottom-20 left-20 flex flex-col gap-3 z-10'>
+                        <div className='absolute bottom-40 left-40 flex flex-col gap-3 z-10'>
                             <p className='font-light text-2xl text-white'>Recently Added</p>
                             <p className='font-semibold text-6xl text-shadow-lg'>{recentlyAdded?.title}</p>
                             <p className='font-light text-md text-gray-200 text-shadow-lg'>{recentlyAdded?.genres.join(", ")}</p>
@@ -152,8 +233,7 @@ export const Home = () => {
                     <div className="pointer-events-none absolute right-0 bottom-0 h-48 w-full bg-gradient-to-t from-[#191919] to-transparent" />
                 </div>
 
-                <Section movies={allMovies} title="You May Like..." />
-                <Section movies={allMovies} title="Recommended" />
+                <Section movies={recommendedTitles} title="Recommended for You" />
 
                 <div className="w-screen relative overflow-hidden bg-[#050505] pb-10 pt-6 shadow-lg">
                     <h2 className="text-2xl text-zinc-100 font-bold mb-4 px-8">Genres</h2>
@@ -175,8 +255,10 @@ export const Home = () => {
                     <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#050505] to-transparent z-10" />
                 </div>
 
-                <Section movies={allMovies} title="Popular TV Shows" />
-                <Section movies={allMovies} title="Horror" />
+                <Section movies={list1} title="Thrillers" />
+                <Section movies={list2} title="Comedies" />
+                <Section movies={list3} title="Drama" />
+                <Section movies={list4} title="Horror" />
             </div>
         )
     } else {
