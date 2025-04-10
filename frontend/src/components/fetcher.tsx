@@ -1,24 +1,15 @@
 const DEV_URL = 'http://127.0.0.1:5016/';
 const PROD_URL = 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net';
-const API_KEY = import.meta.env.VITE_API_KEY;
 const IS_PROD = import.meta.env.MODE === 'production';
 
-export const fetchData = async ({ path, prod = IS_PROD }: { path: string; prod?: boolean }): Promise<any> => {
+export const fetchData = async ({ path }: { path: string; prod?: boolean }): Promise<any> => {
     const jwt = localStorage.getItem('jwt');
-    const fullPath = `${prod ? PROD_URL : DEV_URL}${path}`;
-
-    console.log("Requesting:", fullPath);
-    console.log("LOADED KEY", API_KEY)
-    console.log("RAW KEY", import.meta.env.VITE_API_KEY);
-    console.log('ALL KEYS', import.meta.env)
+    const fullPath = `${IS_PROD ? PROD_URL : DEV_URL}${path}`;
 
     const headers = {
         'Content-Type': 'application/json',
-        'X-API-Key': API_KEY || '',
         'Authorization': jwt ? `Bearer ${jwt}` : '',
     };
-
-    console.log("Headers:", headers);
 
     const response = await fetch(fullPath, {
         method: 'GET',
@@ -50,16 +41,12 @@ export const postData = async ({ path, body, prod = true }: {
     prod?: boolean,
 }): Promise<any> => {
     const jwt = localStorage.getItem('jwt');
-    const fullPath = `${prod ? PROD_URL : DEV_URL}${path}`;
-    console.log("POSTING TO:", fullPath);
-    console.log("BODY:", JSON.stringify(body));
-    console.log("API_KEY:", API_KEY);
+    const fullPath = `${IS_PROD ? PROD_URL : DEV_URL}${path}`;
 
     const response = await fetch(fullPath, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-API-Key': API_KEY || '',
             'Authorization': jwt ? `Bearer ${jwt}` : '',
         },
         body: JSON.stringify(body),
@@ -79,16 +66,12 @@ export const patchData = async ({ path, body, prod = true }: {
     prod?: boolean,
 }): Promise<any> => {
     const jwt = localStorage.getItem('jwt');
-    const fullPath = `${prod ? PROD_URL : DEV_URL}${path}`;
-    console.log("PATCHING TO:", fullPath);
-    console.log("BODY:", JSON.stringify(body));
-    console.log("API_KEY:", API_KEY);
+    const fullPath = `${IS_PROD ? PROD_URL : DEV_URL}${path}`;
 
     const response = await fetch(fullPath, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'X-API-Key': API_KEY || '',
             'Authorization': jwt ? `Bearer ${jwt}` : '',
         },
         body: JSON.stringify(body),

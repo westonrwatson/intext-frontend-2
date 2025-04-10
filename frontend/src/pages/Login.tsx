@@ -3,7 +3,7 @@ import { supabase } from "../utils/supabase";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../utils/useAuthStore";
 
-const API_KEY = import.meta.env.VITE_API_KEY;
+const IS_PROD = import.meta.env.MODE === 'production';
 
 export const Login = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -13,22 +13,7 @@ export const Login = () => {
 
     const setLogin = useAuthStore((state) => state.setLoggedIn);
     const setAdmin = useAuthStore((state) => state.setAdmin);
-    const setUser = useAuthStore((state) => state.setUser); 
-    const login = async () => {
-        const res = await fetch('/check-user', { /* your auth call */ });
-        const data = await res.json();
-        console.log('✅ Backend response:', data);
-
-      
-        useAuthStore.getState().setUser({
-          user_id: data.user_id,
-          name: data.name,
-          email: data.email,
-        });
-      
-        useAuthStore.getState().setLoggedIn(true);
-        useAuthStore.getState().setAdmin(data.admin); // if needed
-      };// ✅ for user info
+    const setUser = useAuthStore((state) => state.setUser);
 
     const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const validatePassword = (password: string) => password.length >= 8;
@@ -43,7 +28,7 @@ export const Login = () => {
             setErrorMessage("Invalid email or password");
             return;
         }
-        
+
         if (data.user) {
             // Check database
 
@@ -57,11 +42,11 @@ export const Login = () => {
         }
 
         try {
-            const response = await fetch('https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/check-user', {
+            const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
+            const response = await fetch(`${url}check-user`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-API-Key': API_KEY,
                 },
                 body: JSON.stringify({ email }),
             });
@@ -112,10 +97,13 @@ export const Login = () => {
     };
 
     const handleGoogleSignIn = async () => {
+
+        const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5173'}`;
+
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/callback'
+                redirectTo: `${url}/callback`,
             }
         });
 
@@ -153,10 +141,10 @@ export const Login = () => {
                             className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                         />
                         {errorMessage && (
-                                <p className="bg-[#2e2e2e] border border-[#EA8C55] text-gray-100 text-xs mt-1 py-2 px-4 rounded-lg">
+                            <p className="bg-[#2e2e2e] border border-[#EA8C55] text-gray-100 text-xs mt-1 py-2 px-4 rounded-lg">
                                 {errorMessage}
                             </p>
-                            )}
+                        )}
                     </div>
 
                     <p className="text-sm text-gray-300 font-regular">

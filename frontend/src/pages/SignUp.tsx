@@ -2,6 +2,8 @@ import { useState } from "react";
 import { supabase } from "../utils/supabase";
 import { MdEmail } from "react-icons/md";
 
+const IS_PROD = import.meta.env.MODE === 'production';
+
 export const SignUp = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const [firstName, setFirstName] = useState<string>("")
@@ -19,13 +21,13 @@ export const SignUp = () => {
         return password.length >= 12
     };
 
-    // 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+    const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5173/'}`;
 
     const handleGoogleSignIn = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/callback'
+                redirectTo: `${url}callback`,
             }
         });
 
@@ -36,6 +38,7 @@ export const SignUp = () => {
     };
 
     const validateSignUp = async (email: string, password: string) => {
+
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
@@ -44,7 +47,7 @@ export const SignUp = () => {
                     first_name: firstName,
                     last_name: lastName
                 },
-                emailRedirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+                emailRedirectTo: `${url}callback`
             }
         })
 
@@ -98,14 +101,14 @@ export const SignUp = () => {
                                 <MdEmail className="text-white w-10 h-10" />
                             </div>
                         </div>
-                    
+
                         <h1 className="text-3xl font-bold">Please verify your email</h1>
-                    
+
                         <p className="text-gray-100 text-center max-w-md">
                             you're almost there! We sent you an email to <br />
                             <span className="font-bold">{email}</span>
                         </p>
-                    
+
                         <p className="text-gray-100 text-center max-w-md">
                             Just click the link sent to you to complete your sign up. If you don’t see it, you may need to <span className="font-bold">check your spam folder.</span>
                         </p>
@@ -170,8 +173,8 @@ export const SignUp = () => {
 
                                 {errorMessage && (
                                     <p className="bg-[#2e2e2e] border border-[#EA8C55] text-gray-100 text-xs mt-1 py-2 px-4 rounded-lg">
-                                    {errorMessage}
-                                </p>
+                                        {errorMessage}
+                                    </p>
                                 )}
                             </div>
 

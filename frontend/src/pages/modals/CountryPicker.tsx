@@ -12,10 +12,7 @@ export const CountryPicker = ({ type, setType, setShowPicker }: {
 
     const getCountries = async () => {
         try {
-            const response = await fetchData({
-                path: "countries",
-                prod: true,
-            });
+            const response = await fetchData({ path: "countries" });
 
             if (Array.isArray(response)) {
                 setCountries(response);

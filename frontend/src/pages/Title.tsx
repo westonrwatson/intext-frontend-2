@@ -9,16 +9,13 @@ import { Section } from '../components/Section';
 import { useAuthStore } from '../utils/useAuthStore';
 
 export const Title = () => {
-    const { user, isLoggedIn } = useAuthStore(); // ✅ Now has user object & login status
+    const { user } = useAuthStore(); // ✅ Now has user object & login status
     const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
     const [title, setTitle] = useState<Title | null>(null);
     const [userRating, setUserRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number | null>(null);
-
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleID');
-    const numFullStar = parseInt(title?.random_rating ?? '0');
-    const numEmptyStar = 5 - numFullStar;
 
     const getMovieData = async () => {
         const response = await fetchData({ path: `titles?show_id=${titleId}` });
@@ -52,29 +49,28 @@ export const Title = () => {
 
     const handleStarClick = async (rating: number) => {
         setUserRating(rating);
-      
+
         console.log("✅ Sending test payload:", {
-          show_id: title?.show_id,
-          user_id: user?.user_id,
-          rating_id: rating
+            show_id: title?.show_id,
+            user_id: user?.user_id,
+            rating_id: rating
         });
-      
+
         try {
-          await postData({
-            path: 'user-ratings',
-            body: {
-              show_id: title?.show_id,
-              user_id: user?.user_id.toString(), // 👈 force test user
-              rating_id: rating,
-            },
-            prod: true,
-          });
+            await postData({
+                path: 'user-ratings',
+                body: {
+                    show_id: title?.show_id,
+                    user_id: user?.user_id.toString(), // 👈 force test user
+                    rating_id: rating,
+                }
+            });
         } catch (err) {
-          console.error("❌ Rating failed:", err);
+            console.error("❌ Rating failed:", err);
         }
     };
-      
-      
+
+
     useEffect(() => {
         const fetchMovieData = async () => {
             const movieData = await getMovieData();

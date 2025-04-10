@@ -55,10 +55,7 @@ export default function Admin() {
         const pageQuery = `pageSize=${pageSize}&pageNumber=${pageNumber}`;
         const query = `${pageQuery}&${filterQuery}`;
 
-        const response = await fetchData({
-            path: `getAllTitles?${query}`,
-            prod: true
-        })
+        const response = await fetchData({ path: `getAllTitles?${query}` })
 
         if (response) {
             const newBuild = []
@@ -289,9 +286,13 @@ export default function Admin() {
                         </tr>
                     </thead>
                     {data.length === 0 ? (
-                        <div className="flex flex-col justify-center items-center w-full h-64">
-                            <p className="text-[#ABABAB] w-full text-2xl font-light text-center">No data available</p>
-                        </div>
+                        <tbody>
+                            <tr>
+                                <td colSpan={9} className="flex flex-col justify-center items-center w-full h-64">
+                                    <p className="text-[#ABABAB] w-full text-2xl font-light text-center">No data available</p>
+                                </td>
+                            </tr>
+                        </tbody>
                     ) : (
                         <tbody>
                             {data.map((item, index) => (

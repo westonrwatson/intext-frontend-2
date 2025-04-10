@@ -4,12 +4,13 @@ import { supabase } from '../utils/supabase'
 import { useAuthStore } from '../utils/useAuthStore'
 import { toast } from 'sonner'
 
-const API_KEY = import.meta.env.VITE_API_KEY
+const IS_PROD = import.meta.env.MODE === 'production';
 
 export default function Callback() {
     const navigate = useNavigate()
     const setLogin = useAuthStore((state) => state.setLoggedIn);
     const setAdmin = useAuthStore((state) => state.setAdmin);
+    const setUser = useAuthStore((state) => state.setUser);
 
     const completeSignIn = async () => {
         const { data, error } = await supabase.auth.getSession()
@@ -27,11 +28,12 @@ export default function Callback() {
                 name = `${data.session.user.user_metadata.first_name} ${data.session.user.user_metadata.last_name}`;
             };
 
-            const response = await fetch('https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/auth', {
+            const url = `${IS_PROD ? 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
+
+            const response = await fetch(`${url}auth`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-API-Key': API_KEY,
                 },
                 body: JSON.stringify({
                     email: data.session.user.email,
@@ -43,15 +45,11 @@ export default function Callback() {
                 throw new Error('Network response was not ok');
             }
 
-            const responseData = await response.json();
-            console.log('Response from API:', responseData);
-
-            if (responseData.authenticated) {
-                const response = await fetch('https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/check-user', {
+            if (response) {
+                const response = await fetch(`${url}check-user`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-API-Key': API_KEY,
                     },
                     body: JSON.stringify({ email: data.session.user.email })
                 });
@@ -61,12 +59,14 @@ export default function Callback() {
                 }
 
                 const responseData = await response.json();
-                console.log('Response from API:', responseData);
-
-                console.log(responseData)
 
                 if (responseData.exists) {
                     setLogin(true)
+                    setUser({
+                        user_id: responseData.user_id,
+                        name: responseData.name,
+                        email: data.session.user.email || ''
+                    })
                     if (responseData.admin === true) {
                         setAdmin(true)
                         navigate('/admin')
@@ -74,8 +74,16 @@ export default function Callback() {
                         setAdmin(false)
                         navigate('/')
                     }
-                };
-            };
+                } else {
+                    console.log('User does not exist in the database')
+                    toast.error('User does not exist in the database')
+                    navigate('/login')
+                }
+            } else {
+                console.log('User does not exist in the database')
+                toast.error('User does not exist in the database')
+                navigate('/login')
+            }
 
             toast.success('Successfully logged in!')
         } else {
