@@ -1,6 +1,7 @@
 const DEV_URL = 'http://127.0.0.1:5016/api/';
 const PROD_URL = 'https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/api/';
 
+
 const API_KEY = import.meta.env.VITE_API_KEY;
 const IS_PROD = import.meta.env.MODE === 'production';
 
