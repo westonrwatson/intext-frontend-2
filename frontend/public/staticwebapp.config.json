@@ -6,7 +6,6 @@
     }
   },
   "globalHeaders": {
-    "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net https://inrnyartmickubjmvefw.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self';"
+    "Content-Security-Policy": "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
   }
 }
-  
