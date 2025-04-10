@@ -1,11 +1,12 @@
-// cool
-
 {
-    "globalHeaders": {
-      "Content-Security-Policy": "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' https://cdn.spotparking.app https://img.icons8.com data:; connect-src 'self' https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net https://inrnyartmickubjmvefw.supabase.co"
-    },
-    "navigationFallback": {
-      "rewrite": "index.html"
+  "routes": [],
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/index.html"
     }
+  },
+  "globalHeaders": {
+    "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net https://inrnyartmickubjmvefw.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self';"
   }
+}
   

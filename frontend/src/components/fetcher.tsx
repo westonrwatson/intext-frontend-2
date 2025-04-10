@@ -8,6 +8,9 @@ export const fetchData = async ({ path, prod = IS_PROD }: { path: string; prod?:
     const fullPath = `${prod ? PROD_URL : DEV_URL}${path}`;
 
     console.log("Requesting:", fullPath);
+    console.log("LOADED KEY", API_KEY)
+    console.log("RAW KEY", import.meta.env.VITE_API_KEY);
+    console.log('ALL KEYS', import.meta.env)
 
     const headers = {
         'Content-Type': 'application/json',
