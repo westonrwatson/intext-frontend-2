@@ -10,6 +10,10 @@ import { TvIcons } from '../components/tvIcons';
 import Arrow from '../components/Arrow';
 import { Section } from '../components/Section';
 import { fetchData, postData } from '../components/fetcher';
+import CookieConsent from "react-cookie-consent";
+import Cookies from 'js-cookie';
+import { LiaCookieBiteSolid } from "react-icons/lia";
+
 
 export const Home = () => {
     const [allMovies, setAllMovies] = useState<Title[]>([])
@@ -201,6 +205,13 @@ export const Home = () => {
         fetchRecommendations();
     }, [userId]);
     
+    // Cokie Consent
+    const [hasConsent, setHasConsent] = useState<boolean>(false);
+    useEffect(() => {
+    const consent = Cookies.get("userConsent"); // "true" or "false" or undefined
+    setHasConsent(consent === "true");
+    }, []);
+
     if (isLoggedIn) {
         return (
             <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
@@ -264,6 +275,70 @@ export const Home = () => {
     } else {
         return (
             <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
+                
+                <CookieConsent
+                location="bottom"
+                buttonText="Accept"
+                declineButtonText="Decline"
+                enableDeclineButton
+                cookieName="userConsent"
+                style={{
+                    background: "#191919",
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0rem 1rem",
+                }}
+                contentStyle={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    flex: "1",
+                }}
+                buttonStyle={{
+                    background: "#EA8C55",
+                    color: "#ffffff",
+                    fontSize: "13px",
+                    borderRadius: "9999px",
+                    padding: "10px 20px",
+                    marginLeft: "0px",
+                    transition: "background 0.3s ease",
+                }}
+                declineButtonStyle={{
+                    background: "#E06861",
+                    color: "#ffffff",
+                    fontSize: "13px",
+                    borderRadius: "9999px",
+                    padding: "10px 20px",
+                    transition: "background 0.3s ease",
+                }}
+                buttonClasses="hover:bg-[#ba6d40]"
+                declineButtonClasses="hover:bg-[#3d2639]"
+                expires={365}
+                onAccept={() => {
+                    Cookies.set("userConsent", "true", { expires: 365 });
+                    console.log("✅ User accepted cookies");
+                }}
+                onDecline={() => {
+                    Cookies.set("userConsent", "false", { expires: 365 });
+                    console.log("🚫 User declined cookies");
+                }}
+                >
+                <span className="inline-flex items-center">
+                    <LiaCookieBiteSolid className="text-2xl mr-2" />
+                    This website uses cookies to enhance the user experience.{" "}
+                    <a
+                    href="/privacy-policy"
+                    style={{ color: "#EA8C55", textDecoration: "underline", marginLeft: "6px" }}
+                    >
+                    Learn more
+                    </a>
+                </span>
+                </CookieConsent>
+
+                
                 <div className="flex flex-col items-center justify-center w-full overflow-hidden text-white gap-4 relative">
 
                     <div className='absolute top-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-6 z-20'>
