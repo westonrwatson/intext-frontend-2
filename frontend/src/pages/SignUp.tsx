@@ -113,7 +113,7 @@ export const SignUp = () => {
                             <p className="text-gray-100 text-center">Still can’t find the email? No problem.</p>
                             <button
                                 onClick={() => validateSignUp(email, password)}
-                                className="px-8 py-3 bg-[#EA8C55] hover:bg-[#8C5433] text-white rounded-full transition text-lg"
+                                className="px-8 py-3 bg-[#EA8C55] hover:bg-[#8C5433] focus:bg-[#6B3A24] text-white rounded-full transition text-lg cursor-pointer focus:outline-none"
                             >
                                 Resend Verification
                             </button>
