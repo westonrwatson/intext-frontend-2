@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../utils/supabase";
+import { MdEmail } from "react-icons/md";
 
 export const SignUp = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -85,10 +86,38 @@ export const SignUp = () => {
 
     return (
         <div className="flex items-center justify-center w-full h-full bg-[#191919] px-4">
-            <div className="bg-[#383838] rounded-lg p-10 w-full max-w-3xl shadow-md text-center">
+            <div className="bg-[#383838] rounded-lg p-20 w-full max-w-2xl shadow-md text-center">
                 {goConfirm ? (
-                    <div className="text-white text-2xl mb-4">
-                        Check your email to confirm your account!
+                    <div className="flex flex-col items-center justify-center text-white space-y-6">
+                        <div className="relative flex items-center justify-center">
+                            {/* Outer faded circle */}
+                            <div className="absolute w-22 h-22 bg-[#EA8C55] opacity-50 rounded-full"></div>
+
+                            {/* Inner solid circle with icon */}
+                            <div className="relative z-10 bg-[#EA8C55] rounded-full p-4">
+                                <MdEmail className="text-white w-10 h-10" />
+                            </div>
+                        </div>
+                    
+                        <h1 className="text-3xl font-bold">Please verify your email</h1>
+                    
+                        <p className="text-gray-100 text-center max-w-md">
+                            you're almost there! We sent you an email to <br />
+                            <span className="font-bold">{email}</span>
+                        </p>
+                    
+                        <p className="text-gray-100 text-center max-w-md">
+                            Just click the link sent to you to complete your sign up. If you don’t see it, you may need to <span className="font-bold">check your spam folder.</span>
+                        </p>
+                        <div className="space-y-3">
+                            <p className="text-gray-100 text-center">Still can’t find the email? No problem.</p>
+                            <button
+                                onClick={() => validateSignUp(email, password)}
+                                className="px-8 py-3 bg-[#EA8C55] hover:bg-[#8C5433] focus:bg-[#6B3A24] text-white rounded-full transition text-lg cursor-pointer focus:outline-none"
+                            >
+                                Resend Verification
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <>
@@ -105,7 +134,7 @@ export const SignUp = () => {
                                             setErrorMessage(null)
                                             setFirstName(e.target.value)
                                         }}
-                                        className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                                        className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                                     />
                                     <input
                                         type="text"
@@ -115,7 +144,7 @@ export const SignUp = () => {
                                             setErrorMessage(null)
                                             setLastName(e.target.value)
                                         }}
-                                        className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                                        className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                                     />
                                 </div>
                                 <input
@@ -126,7 +155,7 @@ export const SignUp = () => {
                                         setErrorMessage(null)
                                         setEmail(e.target.value)
                                     }}
-                                    className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                                    className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                                 />
                                 <input
                                     type="password"
@@ -136,18 +165,18 @@ export const SignUp = () => {
                                         setErrorMessage(null)
                                         setPassword(e.target.value)
                                     }}
-                                    className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                                    className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                                 />
 
                                 {errorMessage && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        {errorMessage}
-                                    </p>
+                                    <p className="bg-[#2e2e2e] border border-[#EA8C55] text-gray-100 text-xs mt-1 py-2 px-4 rounded-lg">
+                                    {errorMessage}
+                                </p>
                                 )}
                             </div>
 
                             <p className="text-sm text-gray-300">
-                                Already have an account? <a href="/login" className="text-[#EA8C55] font-semibold cursor-pointer">Login</a>
+                                Already have an account? <a href="/login" className="text-[#EA8C55] font-bold cursor-pointer">Login</a>
                             </p>
                             <div className="flex flex-row justify-center items-center">
                                 <div
@@ -157,7 +186,7 @@ export const SignUp = () => {
                                         firstName,
                                         lastName
                                     })}
-                                    className="px-8 w-fit text-2xl py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white font-semibold rounded-full transition cursor-pointer"
+                                    className="px-9 w-fit text-xl py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white rounded-full transition cursor-pointer"
                                 >
                                     Sign Up
                                 </div>
@@ -166,7 +195,7 @@ export const SignUp = () => {
                                 </p>
                                 <div
                                     onClick={handleGoogleSignIn}
-                                    className="flex items-center gap-2 px-2 py-2 bg-white text-black font-semibold rounded-full shadow hover:bg-gray-200 transition"
+                                    className="flex items-center gap-2 px-2 py-2 bg-white text-black rounded-full shadow hover:bg-gray-200 transition"
                                 >
                                     <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
                                 </div>

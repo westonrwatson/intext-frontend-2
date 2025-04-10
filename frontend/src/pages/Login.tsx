@@ -93,7 +93,7 @@ export const Login = () => {
             return;
         }
         if (!validatePassword(password)) {
-            setErrorMessage("Password must be at least 8 characters");
+            setErrorMessage("Password must be at least 12 characters long");
             return;
         }
 
@@ -115,7 +115,7 @@ export const Login = () => {
                                 setErrorMessage(null);
                                 setEmail(e.target.value);
                             }}
-                            className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                            className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                         />
                         <input
                             type="password"
@@ -125,21 +125,23 @@ export const Login = () => {
                                 setErrorMessage(null);
                                 setPassword(e.target.value);
                             }}
-                            className="max-w-[400px] w-full px-4 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
+                            className="max-w-[400px] w-full px-7 py-3 rounded-full bg-gray-300 text-black placeholder:text-gray-600 outline-none"
                         />
-
                         {errorMessage && (
-                            <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-                        )}
+                                <p className="bg-[#2e2e2e] border border-[#EA8C55] text-gray-100 text-xs mt-1 py-2 px-4 rounded-lg">
+                                {errorMessage}
+                            </p>
+                            )}
                     </div>
 
-                    <p className="text-sm text-gray-300">
-                        Don’t have an account? <a href="/sign-up" className="text-[#EA8C55] font-semibold cursor-pointer">Sign Up</a>
+                    <p className="text-sm text-gray-300 font-regular">
+                        Don’t have an account? <a href="/sign-up" className="text-[#EA8C55] font-bold cursor-pointer">Sign Up</a>
                     </p>
 
                     <button
                         type="submit"
-                        className="text-2xl px-8 mt-2 py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white font-semibold rounded-full transition cursor-pointer"
+                        onClick={handleSubmit}
+                        className="text-xl px-9 mt-2 py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white font-regular rounded-full transition cursor-pointer"
                     >
                         Login
                     </button>
