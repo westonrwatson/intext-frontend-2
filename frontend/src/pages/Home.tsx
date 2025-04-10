@@ -9,7 +9,11 @@ import { ScrollingIcons } from '../components/ScrollingIcons';
 import { TvIcons } from '../components/tvIcons';
 import Arrow from '../components/Arrow';
 import { Section } from '../components/Section';
-import { fetchData } from '../components/fetcher';
+import { fetchData, postData } from '../components/fetcher';
+import CookieConsent from "react-cookie-consent";
+import Cookies from 'js-cookie';
+import { LiaCookieBiteSolid } from "react-icons/lia";
+
 
 export const Home = () => {
     const [allMovies, setAllMovies] = useState<Title[]>([])
@@ -120,6 +124,94 @@ export const Home = () => {
         getRecentlyAdded()
     }, [])
 
+
+    const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
+    const [list1, setList1] = useState<Title[]>([]); // Thrillers
+    const [list2, setList2] = useState<Title[]>([]); // Comedies
+    const [list3, setList3] = useState<Title[]>([]); // Dramas
+    const [list4, setList4] = useState<Title[]>([]); // Horror Movies
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('user_id') || "1"; // fallback default if needed
+
+    const getUserRecommendations = async (userId: string) => {
+        const response = await fetchData({ path: `user-recommendations?user_id=${userId}&genre=Thrillers&genre=Comedies&genre=Dramas&genre=Horror%20Movies` });
+        return response;
+    };
+
+    const getAllUserRecommendations = async (userId: string) => {
+        const response = await fetchData({ path: `user-recommendations?user_id=${userId}` });
+        return response;
+    };
+
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            try {
+                if (!userId) {
+                    console.warn("⚠️ No userId provided in URL.");
+                    return;
+                }
+    
+                // Step 1: Fetch raw recommendations for user
+                const recommendations = await getUserRecommendations(userId);
+                const allRecommendations = await getAllUserRecommendations(userId);
+    
+                if (!Array.isArray(recommendations)) {
+                    console.error("❌ Invalid response format for recommendations:", recommendations);
+                    return;
+                }
+    
+                // Step 2: Deduplicate by show_id
+                const seen = new Set();
+                const uniqueRecommendations = recommendations.filter((rec: any) => {
+                    if (seen.has(rec.show_id)) return false;
+                    seen.add(rec.show_id);
+                    return true;
+                });
+
+                const seen2 = new Set();
+                const uniqueRecommendations2 = allRecommendations.filter((rec: any) => {
+                    if (seen2.has(rec.show_id)) return false;
+                    seen2.add(rec.show_id);
+                    return true;
+                });
+
+                const thrillerList = [] as Title[];
+                const comedyList = [] as Title[];
+                const dramaList = [] as Title[];
+                const horrorList = [] as Title[];
+
+                uniqueRecommendations.forEach((rec: any) => {
+                    if (rec.genre === 'Thrillers') {
+                        thrillerList.push(rec);
+                    } else if (rec.genre === 'Comedies') {
+                        comedyList.push(rec);
+                    } else if (rec.genre === 'Dramas') {
+                        dramaList.push(rec);
+                    } else if (rec.genre === 'Horror Movies') {
+                        horrorList.push(rec);
+                    }
+                });
+
+                setList1(thrillerList);
+                setList2(comedyList);
+                setList3(dramaList);
+                setList4(horrorList);
+                setRecommendedTitles(uniqueRecommendations2);
+            } catch (err) {
+                console.error("🚨 Failed to fetch recommendations:", err);
+            }
+        };
+    
+        fetchRecommendations();
+    }, [userId]);
+    
+    // Cokie Consent
+    const [hasConsent, setHasConsent] = useState<boolean>(false);
+    useEffect(() => {
+    const consent = Cookies.get("userConsent"); // "true" or "false" or undefined
+    setHasConsent(consent === "true");
+    }, []);
+
     if (isLoggedIn) {
         return (
             <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
@@ -135,7 +227,7 @@ export const Home = () => {
                         className="w-full object-cover aspect-video object-top"
                     />
                     {recentlyAdded && (
-                        <div className='absolute bottom-20 left-20 flex flex-col gap-3 z-10'>
+                        <div className='absolute bottom-40 left-40 flex flex-col gap-3 z-10'>
                             <p className='font-light text-2xl text-white'>Recently Added</p>
                             <p className='font-semibold text-6xl text-shadow-lg'>{recentlyAdded?.title}</p>
                             <p className='font-light text-md text-gray-200 text-shadow-lg'>{recentlyAdded?.genres.join(", ")}</p>
@@ -152,8 +244,7 @@ export const Home = () => {
                     <div className="pointer-events-none absolute right-0 bottom-0 h-48 w-full bg-gradient-to-t from-[#191919] to-transparent" />
                 </div>
 
-                <Section movies={allMovies} title="You May Like..." />
-                <Section movies={allMovies} title="Recommended" />
+                <Section movies={recommendedTitles} title="Recommended for You" />
 
                 <div className="w-screen relative overflow-hidden bg-[#050505] pb-10 pt-6 shadow-lg">
                     <h2 className="text-2xl text-zinc-100 font-bold mb-4 px-8">Genres</h2>
@@ -175,19 +266,85 @@ export const Home = () => {
                     <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#050505] to-transparent z-10" />
                 </div>
 
-                <Section movies={allMovies} title="Popular TV Shows" />
-                <Section movies={allMovies} title="Horror" />
+                <Section movies={list1} title="Thrillers" />
+                <Section movies={list2} title="Comedies" />
+                <Section movies={list3} title="Drama" />
+                <Section movies={list4} title="Horror" />
             </div>
         )
     } else {
         return (
             <div className="flex flex-col items-center justify-start bg-[#191919] min-h-screen no-scrollbar w-full pb-10 gap-8 py-0">
+                
+                <CookieConsent
+                location="bottom"
+                buttonText="Accept"
+                declineButtonText="Decline"
+                enableDeclineButton
+                cookieName="userConsent"
+                style={{
+                    background: "#191919",
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0rem 1rem",
+                }}
+                contentStyle={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    flex: "1",
+                }}
+                buttonStyle={{
+                    background: "#EA8C55",
+                    color: "#ffffff",
+                    fontSize: "13px",
+                    borderRadius: "9999px",
+                    padding: "10px 20px",
+                    marginLeft: "0px",
+                    transition: "background 0.3s ease",
+                }}
+                declineButtonStyle={{
+                    background: "#E06861",
+                    color: "#ffffff",
+                    fontSize: "13px",
+                    borderRadius: "9999px",
+                    padding: "10px 20px",
+                    transition: "background 0.3s ease",
+                }}
+                buttonClasses="hover:bg-[#ba6d40]"
+                declineButtonClasses="hover:bg-[#3d2639]"
+                expires={365}
+                onAccept={() => {
+                    Cookies.set("userConsent", "true", { expires: 365 });
+                    console.log("✅ User accepted cookies");
+                }}
+                onDecline={() => {
+                    Cookies.set("userConsent", "false", { expires: 365 });
+                    console.log("🚫 User declined cookies");
+                }}
+                >
+                <span className="inline-flex items-center">
+                    <LiaCookieBiteSolid className="text-2xl mr-2" />
+                    This website uses cookies to enhance the user experience.{" "}
+                    <a
+                    href="/privacy-policy"
+                    style={{ color: "#EA8C55", textDecoration: "underline", marginLeft: "6px" }}
+                    >
+                    Learn more
+                    </a>
+                </span>
+                </CookieConsent>
+
+                
                 <div className="flex flex-col items-center justify-center w-full overflow-hidden text-white gap-4 relative">
 
                     <div className='absolute top-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-6 z-20'>
-                        <p className='text-[60px] text-center text-shadow-lg font-bold text-white select-none'>Rediscover Film. Curated Classics,</p>
-                        <p className='text-[60px] text-center text-shadow-lg font-bold text-white select-none -mt-10'>Hidden Gems, Indie Gold.</p>
-                        <a href='/login' draggable={false} className='text-2xl text-white bg-[#503047] py-5 px-8 rounded-full font-light hover:bg-[#402639] transition cursor-pointer select-none'>Start Watching Now</a>
+                        <p className='text-[55px] text-center text-shadow-lg font-bold text-white select-none'>Rediscover Film. Curated Classics,</p>
+                        <p className='text-[55px] text-center text-shadow-lg font-bold text-white select-none -mt-10'>Hidden Gems, Indie Gold.</p>
+                        <a href='/sign-up' draggable={false} className='text-xl text-white bg-[#503047] py-4 px-9 rounded-full font-light hover:bg-[#402639] transition cursor-pointer select-none'>Start Watching Now</a>
                     </div>
 
                     <div className='w-fit flex rotate-[30deg] h-screen z-10'>
@@ -310,12 +467,14 @@ export const Home = () => {
                     <div className='w-full h-fit flex flex-col justify-center items-center gap-10 pb-10'>
                         <div className='flex flex-col gap-1 justify-center items-center py-6'>
                             <p className="text-4xl md:text-4xl select-none text-center pt-32 text-white w-full font-bold">Where You Can Watch</p>
+                            <div className="w-full max-w-6xl overflow-hidden">
                             <ScrollingIcons icons={[<TvIcons />, <TvIcons />, <TvIcons />, <TvIcons />, <TvIcons />]} />
+                            </div>
                         </div>
 
                         <div draggable={false} className='w-[90%] max-w-6xl h-64 bg-[#E9AF59] rounded-xl flex flex-col justify-center items-center gap-8'>
                             <p draggable={false} className="text-4xl md:text-5xl text-center text-white w-full font-semibold select-none">Join Free for 7 Days</p>
-                            <a href='/sign-up' draggable={false} className='text-2xl text-white bg-[#503047] py-5 px-8 rounded-full hover:bg-[#402639] transition cursor-pointer select-none'>Sign Up Now</a>
+                            <a href='/sign-up' draggable={false} className='text-xl text-white bg-[#503047] py-4 px-8 rounded-full hover:bg-[#402639] transition cursor-pointer select-none'>Sign Up Now</a>
                         </div>
                     </div>
 
