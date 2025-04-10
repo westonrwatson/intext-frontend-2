@@ -50,7 +50,7 @@ export const Login = () => {
         }
 
         try {
-            const response = await fetch('https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/check-user', {
+            const response = await fetch('http://localhost:5016/check-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,12 +67,7 @@ export const Login = () => {
             console.log('✅ Backend response:', responseData);
 
             if (responseData.exists) {
-                console.log(responseData.user_id)
-                setUser({
-                    user_id: responseData.user_id, // ⬅️ Make sure backend includes this
-                    name: responseData.name || "",  // ⬅️ and this
-                    email: email,
-                });
+                setUser(responseData.user);
 
                 setLogin(true);
                 setAdmin(responseData.admin === true);

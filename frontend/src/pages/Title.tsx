@@ -15,8 +15,6 @@ export const Title = () => {
     const [userRating, setUserRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number | null>(null);
 
-
-
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleID');
     const numFullStar = parseInt(title?.random_rating ?? '0');
@@ -29,6 +27,17 @@ export const Title = () => {
         return { ...movie, genres: movieGenres };
     };
 
+    const getMovieRating = async (title: Title) => {
+        const response = await fetchData({ path: `user-ratings?show_id=${title.show_id}&user_id=${user?.user_id}` });
+        const rating = parseInt(response.rating)
+
+        if (rating > 0) {
+            setUserRating(rating);
+        } else {
+            setUserRating(0);
+        };
+    }
+
     const getSimilarMovies = async (title: Title) => {
         const response = await fetchData({ path: `similar-movies?title=${title.title}` });
         return response;
@@ -40,14 +49,13 @@ export const Title = () => {
         const minutesLeft = parsedMinutes % 60;
         return `${hours}h ${minutesLeft}m`;
     };
+
     const handleStarClick = async (rating: number) => {
         setUserRating(rating);
       
-        const testUserId = 1; // ✅ Hardcoded test user
-      
         console.log("✅ Sending test payload:", {
           show_id: title?.show_id,
-          user_id: testUserId,
+          user_id: user?.user_id,
           rating_id: rating
         });
       
@@ -56,23 +64,23 @@ export const Title = () => {
             path: 'user-ratings',
             body: {
               show_id: title?.show_id,
-              user_id: testUserId, // 👈 force test user
+              user_id: user?.user_id.toString(), // 👈 force test user
               rating_id: rating,
             },
             prod: false,
           });
-      
-          alert(`You rated this ${rating} star${rating > 1 ? 's' : ''}`);
         } catch (err) {
           console.error("❌ Rating failed:", err);
         }
-      };
+    };
       
       
     useEffect(() => {
         const fetchMovieData = async () => {
             const movieData = await getMovieData();
             setTitle(movieData);
+
+            getMovieRating(movieData);
 
             const similarMovies = await getSimilarMovies(movieData);
 
