@@ -31,4 +31,40 @@ export const genres = [
     "TV Dramas",
     "Talk Shows TV Comedies",
     "Thrillers"
-]
+];
+
+
+export const genreKeyMapValues = [
+    "Action",
+    "Adventure",
+    "Anime_Series_International_TV_Shows",
+    "British_TV_Shows_Docuseries_International_TV_Shows",
+    "Children",
+    "Comedies",
+    "Comedies_Dramas_International_Movies",
+    "Comedies_International_Movies",
+    "Comedies_Romantic_Movies",
+    "Crime_TV_Shows_Docuseries",
+    "Documentaries",
+    "Documentaries_International_Movies",
+    "Docuseries",
+    "Dramas",
+    "Dramas_International_Movies",
+    "Dramas_Romantic_Movies",
+    "Family_Movies",
+    "Fantasy",
+    "Horror_Movies",
+    "International_Movies_Thrillers",
+    "International_TV_Shows_Romantic_TV_Shows_TV_Dramas",
+    "Kids'_TV",
+    "Language_TV_Shows",
+    "Musicals",
+    "Nature_TV",
+    "Reality_TV",
+    "Spirituality",
+    "TV_Action",
+    "TV_Comedies",
+    "TV_Dramas",
+    "Talk_Shows_TV_Comedies",
+    "Thrillers"
+];

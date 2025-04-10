@@ -94,13 +94,19 @@ export const Title = () => {
 
                     {/* Play buttons etc */}
                     <div className='flex flex-row justify-start items-center gap-4'>
-                        <div className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 h-12 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
+                        <div
+                            onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", '_blank')}
+                            className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 h-12 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'
+                        >
                             <div className='bg-[#AF6A42] group-hover:bg-[#8C5433] rounded-full w-8 h-8 flex justify-center items-center'>
                                 <FaPlay size={16} className="text-zinc-100" />
                             </div>
                             <p className='group-hover:text-gray-100 text-lg pr-1'>Play Now</p>
                         </div>
-                        <div className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 h-12 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
+                        <div
+                            onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", '_blank')}
+                            className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 h-12 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'
+                        >
                             <p className='group-hover:text-gray-100 text-lg px-2'>Trailer</p>
                         </div>
                         <div className='flex backdrop-blur-sm flex-row gap-2 items-center justify-center bg-transparent h-12 w-12 border border-[#F25F5D] rounded-full px-3 cursor-pointer group hover:shadow-lg transition hover:bg-[#F25F5D]'>

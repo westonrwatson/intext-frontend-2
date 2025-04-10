@@ -11,6 +11,7 @@ import { useAuthStore } from "../utils/useAuthStore";
 
 export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: boolean) => void }>(({ setSearchActive }, ref) => {
     const setLogin = useAuthStore((state) => state.setLoggedIn);
+    const currentPath = window.location.pathname;
     const isLogginIn = useAuthStore((state) => state.isLoggedIn);
     const isAdmin = useAuthStore((state) => state.isAdmin);
     const handleLogout = () => {
@@ -20,9 +21,7 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
         window.location.href = '/';
     };
 
-    const handleLogin = () => {
-        window.location.href = '/login';
-    };
+    const handleLogin = () => { window.location.href = '/login' };
 
     const HeaderLink = ({ icon, text, link }: { icon: any, text: string, link?: string }) => {
         if (!link) {
@@ -107,7 +106,7 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
 
             {/* Search Bar */}
             {
-                isLogginIn && (
+                isLogginIn && currentPath !== '/admin' && (
                     <div
                         className={`flex flex-col justify-center items-center absolute left-1/2 -translate-x-1/2 gap-2 w-1/3`}
                         onClick={() => setSearchActive(true)}
