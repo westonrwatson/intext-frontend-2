@@ -77,8 +77,12 @@ export const Login = () => {
                 setUser(responseData.user);
 
                 setLogin(true);
-                setAdmin(responseData.admin === true);
-                navigate('/');
+                if (responseData.admin) {
+                    setAdmin(true);
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
             } else {
                 setErrorMessage("User does not exist in the database.");
             }

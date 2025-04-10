@@ -66,13 +66,14 @@ export default function Callback() {
                 console.log(responseData)
 
                 if (responseData.exists) {
+                    setLogin(true)
                     if (responseData.admin === true) {
                         setAdmin(true)
+                        navigate('/admin')
                     } else {
                         setAdmin(false)
+                        navigate('/')
                     }
-                    setLogin(true)
-                    navigate('/')
                 };
             };
 
