@@ -35,15 +35,22 @@ export const Login = () => {
 
     const validateLogin = async (email: string, password: string) => {
         const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
+            email: email,
+            password: password,
+        })
 
         if (error) {
             setErrorMessage("Invalid email or password");
             return;
         }
+        
+        if (data.user) {
+            // Check database
 
+            const jwt = data.session?.access_token
+            if (jwt) localStorage.setItem('jwt', jwt)
+
+        }
         if (!data.user) {
             setErrorMessage("Unable to log in.");
             return;
@@ -100,6 +107,20 @@ export const Login = () => {
         validateLogin(email, password);
     };
 
+    const handleGoogleSignIn = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: 'http://localhost:5173/callback'
+            }
+        });
+
+        if (error) {
+            console.error('Google sign-in error:', error.message)
+            setErrorMessage('Failed to sign in with Google.')
+        }
+    };
+
     return (
         <div className="flex items-center justify-center h-full bg-[#191919] px-4">
             <div className="bg-[#383838] rounded-lg p-10 w-full max-w-3xl shadow-md text-center">
@@ -137,14 +158,25 @@ export const Login = () => {
                     <p className="text-sm text-gray-300 font-regular">
                         Don’t have an account? <a href="/sign-up" className="text-[#EA8C55] font-bold cursor-pointer">Sign Up</a>
                     </p>
-
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                        className="text-xl px-9 mt-2 py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white font-regular rounded-full transition cursor-pointer"
-                    >
-                        Login
-                    </button>
+                    <div className="flex flex-row justify-center items-center">
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            className="text-2xl px-8 mt-2 py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white font-semibold rounded-full transition cursor-pointer"
+                        >
+                            Login
+                        </button>
+                        <p className="text-white px-3">
+                            Or
+                        </p>
+                        <div
+                            onClick={handleGoogleSignIn}
+                            draggable={false}
+                            className="flex items-center gap-2 px-2 py-2 bg-white text-black font-semibold cursor-pointer rounded-full shadow hover:bg-gray-200 transition select-none"
+                        >
+                            <img draggable={false} src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
+                        </div>
+                    </div>
                 </form>
 
                 <div className="mt-8">

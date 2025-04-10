@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../utils/supabase'
 import { useAuthStore } from '../utils/useAuthStore'
+import { toast } from 'sonner'
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
@@ -13,12 +14,19 @@ export default function Callback() {
     const completeSignIn = async () => {
         const { data, error } = await supabase.auth.getSession()
 
-        console.log(data)
-
         if (data.session) {
-            console.log('✅ Logged in user:', data.session.user)
+            console.log('✅ Logged in user')
 
-            console.log(`API_KEY: ${API_KEY}`);
+            const jwt = data.session.access_token
+            localStorage.setItem('jwt', jwt)
+
+            let name = "";
+            if (!data.session.user.user_metadata.first_name || !data.session.user.user_metadata.last_name) {
+                name = data.session.user.user_metadata.full_name;
+            } else {
+                name = `${data.session.user.user_metadata.first_name} ${data.session.user.user_metadata.last_name}`;
+            };
+
             const response = await fetch('https://cineniche-api-afcbcqf8fmcbace6.eastus-01.azurewebsites.net/auth', {
                 method: 'POST',
                 headers: {
@@ -27,8 +35,7 @@ export default function Callback() {
                 },
                 body: JSON.stringify({
                     email: data.session.user.email,
-                    first_name: data.session.user.user_metadata.first_name,
-                    last_name: data.session.user.user_metadata.last_name,
+                    name: name,
                 })
             });
 
@@ -69,14 +76,13 @@ export default function Callback() {
                 };
             };
 
-            // maybe show toast, save user, etc
+            toast.success('Successfully logged in!')
         } else {
             console.error('⚠️ Error during session:', error)
             navigate('/login')
         }
     }
     useEffect(() => {
-
         completeSignIn()
     }, [])
 

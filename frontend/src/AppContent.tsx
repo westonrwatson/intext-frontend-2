@@ -18,10 +18,11 @@ import { useAuthStore } from './utils/useAuthStore';
 import React from 'react';
 import Callback from './pages/Callback';
 import Admin from './pages/Admin';
+import { Toaster } from 'sonner';
 
 export const AppContent = () => {
     const location = useLocation();
-    const noFooterPages = ['tv-shows', 'movies', 'login', 'sign-up', 'callback'];
+    const noFooterPages = ['tv-shows', 'movies', 'login', 'sign-up', 'callback', 'admin'];
     const shouldShowFooter = !noFooterPages.some(path => location.pathname.includes(path));
     const [searchActive, setSearchActive] = useState(false);
     const searchWrapperRef = useRef<HTMLDivElement | null>(null);

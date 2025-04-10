@@ -19,13 +19,13 @@ export const SignUp = () => {
         return password.length >= 12
     };
 
-    'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+    // 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
 
     const handleGoogleSignIn = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'https://zealous-water-0b3cb241e.6.azurestaticapps.net/callback'
+                redirectTo: 'http://localhost:5173/callback'
             }
         });
 
@@ -51,7 +51,7 @@ export const SignUp = () => {
         if (data.user) {
             setGoConfirm(true)
             return;
-        }
+        };
     };
 
     const handleSubmit = ({
@@ -195,9 +195,10 @@ export const SignUp = () => {
                                 </p>
                                 <div
                                     onClick={handleGoogleSignIn}
-                                    className="flex items-center gap-2 px-2 py-2 bg-white text-black rounded-full shadow hover:bg-gray-200 transition"
+                                    draggable={false}
+                                    className="flex items-center gap-2 px-2 py-2 bg-white text-black font-semibold cursor-pointer rounded-full shadow hover:bg-gray-200 transition select-none"
                                 >
-                                    <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
+                                    <img draggable={false} src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
                                 </div>
                             </div>
                         </div>
