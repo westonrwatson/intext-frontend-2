@@ -29,7 +29,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
         const response = await patchData({
             path: "patch-movie",
             body: payload,
-            prod: false,
+            prod: true,
         })
 
         if (response.error) {
@@ -61,7 +61,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
             body: {
                 show_id: title?.show_id,
             },
-            prod: false,
+            prod: true,
         });
 
         if (response.error) {
@@ -144,7 +144,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
             const response = await postData({
                 path: "add-movie",
                 body: newTitleData,
-                prod: false,
+                prod: true,
             });
 
             if (response.error) {

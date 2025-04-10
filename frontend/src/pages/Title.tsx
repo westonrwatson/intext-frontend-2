@@ -67,7 +67,7 @@ export const Title = () => {
               user_id: user?.user_id.toString(), // 👈 force test user
               rating_id: rating,
             },
-            prod: false,
+            prod: true,
           });
         } catch (err) {
           console.error("❌ Rating failed:", err);

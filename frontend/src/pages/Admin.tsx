@@ -57,7 +57,7 @@ export default function Admin() {
 
         const response = await fetchData({
             path: `getAllTitles?${query}`,
-            prod: false
+            prod: true
         })
 
         if (response) {

@@ -57,7 +57,7 @@ export const Login = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5016/check-user', {
+            const response = await fetch('https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/check-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export const Login = () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:5173/callback'
+                redirectTo: 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/callback'
             }
         });
 

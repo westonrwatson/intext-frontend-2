@@ -25,7 +25,7 @@ export const SignUp = () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:5173/callback'
+                redirectTo: 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/callback'
             }
         });
 
