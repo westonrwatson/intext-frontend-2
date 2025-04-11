@@ -126,7 +126,7 @@ export const Home = () => {
 
 
     const [recommendedTitles, setRecommendedTitles] = useState<Title[]>([]);
-    const [list1, setList1] = useState<Title[]>([]); // Thrillers
+    const [list1, setList1] = useState<Title[]>([]); // Fantasy
     const [list2, setList2] = useState<Title[]>([]); // Comedies
     const [list3, setList3] = useState<Title[]>([]); // Dramas
     const [list4, setList4] = useState<Title[]>([]); // Horror Movies
@@ -134,7 +134,7 @@ export const Home = () => {
     const userId = params.get('user_id') || "1"; // fallback default if needed
 
     const getUserRecommendations = async (userId: string) => {
-        const response = await fetchData({ path: `user-recommendations?user_id=${userId}&genre=Thrillers&genre=Comedies&genre=Dramas&genre=Horror%20Movies` });
+        const response = await fetchData({ path: `user-recommendations?user_id=${userId}&genre=Fantasy&genre=Comedies&genre=Dramas&genre=Horror%20Movies` });
         return response;
     };
 
@@ -175,14 +175,14 @@ export const Home = () => {
                     return true;
                 });
 
-                const thrillerList = [] as Title[];
+                const FantasyList = [] as Title[];
                 const comedyList = [] as Title[];
                 const dramaList = [] as Title[];
                 const horrorList = [] as Title[];
 
                 uniqueRecommendations.forEach((rec: any) => {
-                    if (rec.genre === 'Thrillers') {
-                        thrillerList.push(rec);
+                    if (rec.genre === 'Fantasy') {
+                        FantasyList.push(rec);
                     } else if (rec.genre === 'Comedies') {
                         comedyList.push(rec);
                     } else if (rec.genre === 'Dramas') {
@@ -192,7 +192,7 @@ export const Home = () => {
                     }
                 });
 
-                setList1(thrillerList);
+                setList1(FantasyList);
                 setList2(comedyList);
                 setList3(dramaList);
                 setList4(horrorList);
@@ -232,7 +232,7 @@ export const Home = () => {
                             <p className='font-semibold text-6xl text-shadow-lg'>{recentlyAdded?.title}</p>
                             <p className='font-light text-md text-gray-200 text-shadow-lg'>{recentlyAdded?.genres.join(", ")}</p>
 
-                            <div className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 py-2 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
+                            <div onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", '_blank')} className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 py-2 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
                                 <div className='bg-[#AF6A42] group-hover:bg-[#8C5433] rounded-full w-8 h-8 flex justify-center items-center'>
                                     <FaPlay size={16} className="text-zinc-100" />
                                 </div>
@@ -283,7 +283,7 @@ export const Home = () => {
                     <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#050505] to-transparent z-10" />
                 </div>
 
-                <Section movies={list1} title="Thrillers" />
+                <Section movies={list1} title="Fantasy" />
                 <Section movies={list2} title="Comedies" />
                 <Section movies={list3} title="Drama" />
                 <Section movies={list4} title="Horror" />
