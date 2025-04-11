@@ -86,10 +86,10 @@ export const Movies = () => {
 
     return (
         <div className="flex flex-col items-center min-h-screen justify-start bg-[#191919] no-scrollbar w-full gap-10 mt-10 py-20">
-            <p className='font-semibold text-4xl -mt-5 -mb-5 text-shadow-lg text-white'>Movies</p>
+            <p className='font-semibold text-4xl -mt-5 -mb-5 text-shadow-lg select-none text-white'>Movies</p>
 
             <div className="w-screen relative overflow-hidden pb-2 pt-2">
-                <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
+                <div className="grid grid-rows-1 auto-cols-max select-none grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
                 {genres
                 .filter(genre => !genre.includes("TV"))
                 .map((genre, index) => {
@@ -106,11 +106,11 @@ export const Movies = () => {
                         const encoded = encodeURIComponent(genre)
                         window.history.pushState({}, '', `?genre=${encoded}`)
                         }}
-                        className={`cursor-pointer transition text-md px-6 py-4 min-w-[150px] max-w-[250px] rounded-lg flex items-center justify-center ${
+                        className={`cursor-pointer transition select-none text-md px-6 py-4 min-w-[150px] max-w-[250px] rounded-lg flex items-center justify-center ${
                         isSelected ? 'bg-white text-black font-semibold' : 'bg-[#383838] text-white hover:bg-[#252525]'
                         }`}
                     >
-                        <span className={`truncate whitespace-nowrap overflow-hidden w-full text-center`}>
+                        <span className={`truncate whitespace-nowrap select-none overflow-hidden w-full text-center`}>
                         {genre}
                         </span>
                     </div>
@@ -140,7 +140,7 @@ export const Movies = () => {
                     <div className="pointer-events-none fixed bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#191919] to-transparent z-10" />
                 </div>
                 ) : (
-                <div className="flex items-center justify-center w-full h-full text-white text-lg font-semibold">
+                <div className="flex items-center justify-center select-none w-full h-full text-white text-lg font-semibold">
                     No movies found for this genre.
                 </div>
                 )}

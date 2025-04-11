@@ -11,6 +11,9 @@ import { EditModal } from '../components/EditModal';
 import { Toaster } from 'sonner';
 
 export default function Admin() {
+    // Admin page for managing movies
+    // This page is used to manage movies, add new movies, and edit existing movies
+    // States
     const [data, setData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
@@ -18,11 +21,18 @@ export default function Admin() {
     const [sortOrder, setSortOrder] = useState('desc');
     const [type, setType] = useState('');
     const [genre, setGenre] = useState('');
-
+    // States for search
+    const [searchActive, setSearchActive] = useState(false);
+    const [searchQuery, setSearchQuery] = useState<string | undefined>('');
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [highlightSearchInput, setHighlightSearchInput] = useState(false);
+    const [activeTitle, setActiveTitle] = useState<Title | null>(null);
     const [showTypePicker, setShowTypePicker] = useState(false);
     const [showGenrePicker, setShowGenrePicker] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const searchInputRef = useRef<HTMLInputElement | null>(null);
 
+    // Fetch data from API
     useEffect(() => {
         const handleKeyDown = (event: any) => {
             if ((event.metaKey || event.ctrlKey) && event.key === "k") {
@@ -42,6 +52,7 @@ export default function Admin() {
         };
     }, []);
 
+    // Function to fetch data from API
     const getRows = async ({ pageSize, pageNumber, filters }: {
         pageSize: number;
         pageNumber: number;
@@ -55,7 +66,7 @@ export default function Admin() {
         const pageQuery = `pageSize=${pageSize}&pageNumber=${pageNumber}`;
         const query = `${pageQuery}&${filterQuery}`;
 
-        const response = await fetchData({ path: `getAllTitles?${query}` })
+        const response = await fetchData({ path: `getAllTitles?${query}` });
 
         if (response) {
             const newBuild = []
@@ -63,46 +74,30 @@ export default function Admin() {
                 const movieGenres = Object.keys(item).filter(key => genres.includes(key) && item[key] === 1)
                 item.genres = movieGenres
                 newBuild.push(item)
-            }
+            };
 
             newBuild.sort((a, b) => {
                 const aValue = a[sortBy];
                 const bValue = b[sortBy];
-                if (aValue < bValue) {
-                    return sortOrder === 'desc' ? -1 : 1;
-                }
-                if (aValue > bValue) {
-                    return sortOrder === 'desc' ? 1 : -1;
-                }
+                if (aValue < bValue) return sortOrder === 'desc' ? -1 : 1;
+                if (aValue > bValue) return sortOrder === 'desc' ? 1 : -1;
                 return 0;
             });
-
-            console.log(newBuild)
 
             setData(newBuild);
         } else {
             console.error('Failed to fetch data');
-        }
-    }
+        };
+    };
 
-
-    const [searchActive, setSearchActive] = useState(false);
-    const [searchQuery, setSearchQuery] = useState<string | undefined>('');
-    const [searchResults, setSearchResults] = useState<any[]>([]);
-    const searchInputRef = useRef<HTMLInputElement | null>(null);
-    const [highlightSearchInput, setHighlightSearchInput] = useState(false);
-
+    // Function to fetch data from API when page size, sort by, sort order, type, genre, search query, or page number changes
     useEffect(() => {
         if (searchQuery) {
             searchResults.sort((a, b) => {
                 const aValue = a[sortBy];
                 const bValue = b[sortBy];
-                if (aValue < bValue) {
-                    return sortOrder === 'desc' ? -1 : 1;
-                }
-                if (aValue > bValue) {
-                    return sortOrder === 'desc' ? 1 : -1;
-                }
+                if (aValue < bValue) return sortOrder === 'desc' ? -1 : 1;
+                if (aValue > bValue) return sortOrder === 'desc' ? 1 : -1;
                 return 0;
             });
             setData(searchResults || []);
@@ -111,18 +106,16 @@ export default function Admin() {
             const filtersObj = {
                 type: type,
                 genre: genre,
-            }
+            };
 
-            const filters = Object.fromEntries(
-                Object.entries(filtersObj).filter(([_, value]) => value !== '')
-            );
+            const filters = Object.fromEntries(Object.entries(filtersObj).filter(([_, value]) => value !== ''));
 
             getRows({
                 pageSize,
                 pageNumber: pageNumber,
                 filters
-            })
-        }
+            });
+        };
     }, [pageSize, sortBy, sortOrder, type, genre, searchQuery, pageNumber, showEditModal]);
 
     useEffect(() => {
@@ -146,19 +139,13 @@ export default function Admin() {
 
     useEffect(() => {
         if (searchActive) {
-            if (searchInputRef.current) {
-                searchInputRef.current.focus();
-            }
+            if (searchInputRef.current) searchInputRef.current.focus();
             setHighlightSearchInput(true);
         } else {
-            if (searchInputRef.current) {
-                searchInputRef.current.blur();
-            }
+            if (searchInputRef.current) searchInputRef.current.blur();
             setHighlightSearchInput(false);
         };
     }, [searchActive]);
-
-    const [activeTitle, setActiveTitle] = useState<Title | null>(null);
 
     return (
         <div className='text-white bg-[#191919] px-10 flex flex-col gap-10 h-full'>
@@ -371,4 +358,4 @@ export default function Admin() {
             <Toaster position="top-center" richColors />
         </div >
     );
-}
+};

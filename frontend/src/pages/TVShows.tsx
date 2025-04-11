@@ -15,19 +15,17 @@ type Title = {
 }
 
 export const TVShows = () => {
-    const [allMovies, setAllMovies] = useState<Title[]>([])
-    const [visibleMovies, setVisibleMovies] = useState<Title[]>([])
-    const location = useLocation()
-    const params = new URLSearchParams(location.search)
-    const genreFromUrl = params.get("genre")
-    const [selectedGenre, setSelectedGenre] = useState<string>(genreFromUrl || 'Action')
-    const [scrollIndex, setScrollIndex] = useState(CHUNK_SIZE)
-    const [loading, setLoading] = useState(true)
-    const loaderRef = useRef<HTMLDivElement>(null)
+    const [allMovies, setAllMovies] = useState<Title[]>([]);
+    const [visibleMovies, setVisibleMovies] = useState<Title[]>([]);
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const genreFromUrl = params.get("genre");
+    const [selectedGenre, setSelectedGenre] = useState<string>(genreFromUrl || 'Action');
+    const [scrollIndex, setScrollIndex] = useState(CHUNK_SIZE);
+    const [loading, setLoading] = useState(true);
+    const loaderRef = useRef<HTMLDivElement>(null);
+    const genreRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-
-    const genreRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
-    const scrollTargetRef = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
         const el = genreRefs.current[selectedGenre]
         if (el) {
@@ -37,10 +35,10 @@ export const TVShows = () => {
 
     // Load movies from API on genre change
     useEffect(() => {
-        setLoading(true)
-        setScrollIndex(CHUNK_SIZE)
+        setLoading(true);
+        setScrollIndex(CHUNK_SIZE);
 
-        const underscore = selectedGenre.replace(/ /g, "_")
+        const underscore = selectedGenre.replace(/ /g, "_");
 
         fetchData({ path: `titles?type=TV Show&genre=${underscore}&count=500` })
             .then(data => {
@@ -69,7 +67,7 @@ export const TVShows = () => {
                 rootMargin: '0px',
                 threshold: 1.0,
             }
-        )
+        );
 
         observer.observe(loaderRef.current)
         return () => observer.disconnect()
@@ -80,11 +78,11 @@ export const TVShows = () => {
         if (nextChunk.length === 0) return
         setVisibleMovies(prev => [...prev, ...nextChunk])
         setScrollIndex(prev => prev + CHUNK_SIZE)
-    }
+    };
 
     return (
         <div className="flex flex-col items-center min-h-screen justify-start bg-[#191919] no-scrollbar w-full gap-10 mt-10 py-20">
-            <p className='font-semibold text-4xl -mt-5 -mb-5 text-shadow-lg text-white'>TV Shows</p>
+            <p className='font-semibold text-4xl -mt-5 -mb-5 text-shadow-lg select-none text-white'>TV Shows</p>
 
             <div className="w-screen relative overflow-hidden pb-2 pt-2">
                 <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
@@ -102,11 +100,11 @@ export const TVShows = () => {
                         setSelectedGenre(genre)
                         window.history.pushState({}, '', `?genre=${encoded}`)
                     }}
-                    className={`cursor-pointer transition text-md px-6 py-4 min-w-[150px] max-w-[250px] rounded-lg flex items-center justify-center ${
+                    className={`cursor-pointer select-none transition text-md px-6 py-4 min-w-[150px] max-w-[250px] rounded-lg flex items-center justify-center ${
                         isSelected ? 'bg-white text-black font-semibold' : 'bg-[#383838] text-white hover:bg-[#252525]'
                     }`}
                     >
-                    <span className={`truncate whitespace-nowrap overflow-hidden w-full text-center`}>
+                    <span className={`truncate select-none whitespace-nowrap overflow-hidden w-full text-center`}>
                         {genre}
                     </span>
                     </div>
@@ -135,7 +133,7 @@ export const TVShows = () => {
                     <div className="pointer-events-none fixed bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#191919] to-transparent z-10" />
                 </div>
                 ) : (
-                <div className="flex items-center justify-center w-full h-full text-white text-lg font-semibold">
+                <div className="flex items-center select-none justify-center w-full h-full text-white text-lg font-semibold">
                     No shows found for this genre.
                 </div>
                 )}

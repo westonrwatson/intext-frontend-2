@@ -15,10 +15,10 @@ export const Footer = () => {
                 </Link>
                 {isLogginIn && (
                     <>
-                        <Link to="/tv-shows" draggable={false} className="text-white font-extralight hover:text-gray-400 transition">
+                        <Link to="/tv-shows" draggable={false} className="text-white select-none font-extralight hover:text-gray-400 transition">
                             TV Shows
                         </Link>
-                        <Link to="/movies" draggable={false} className="text-white font-extralight hover:text-gray-400 transition">
+                        <Link to="/movies" draggable={false} className="text-white select-none font-extralight hover:text-gray-400 transition">
                             Movies
                         </Link>
                     </>

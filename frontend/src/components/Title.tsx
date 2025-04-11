@@ -1,5 +1,3 @@
-import { FaHeart } from "react-icons/fa6";
-import { FaStar } from "react-icons/fa6";
 import { Heart } from "./Heart";
 
 export const Title = ({
@@ -19,15 +17,13 @@ export const Title = ({
     },
     full?: boolean
 }) => {
+    // this component is used to display a title in the home page and in the search page
     const cdnUrl = "https://cdn.spotparking.app/public/posters/";
-    const numFullStar = parseInt(movie?.random_rating ?? '0');
-    const numEmptyStar = 5 - numFullStar
-
     const handleClick = () => { window.location.href = movie ? `/title?titleID=${movie?.show_id}` : `/title?titleID=${title?.show_id}` };
 
     if (!movie) {
         return (
-            <div key={title?.title} className={`flex-shrink-0 w-48 flex flex-col gap-2 items-center justify-center h-fit overflow-hidden transition ${full ? '' : "scale-100"}`}>
+            <div key={title?.title} className={`flex-shrink-0 select-none w-48 flex flex-col gap-2 items-center justify-center h-fit overflow-hidden transition ${full ? '' : "scale-100"}`}>
                 <img
                     src={`${cdnUrl}${title?.title}.jpg`}
                     draggable={false}
@@ -39,13 +35,13 @@ export const Title = ({
                         target.onerror = null; // Prevent looping
                         e.currentTarget.src = `${cdnUrl}fallbackImage.jpg`;
                     }}
-                    className={`w-full aspect-[3/4] object-fill overflow-hidden mb-2 rounded-lg ${full ? "hover:opacity-50" : 'shadow-xl'} cursor-pointer transition`}
+                    className={`w-full aspect-[3/4] object-fill select-none overflow-hidden mb-2 rounded-lg ${full ? "hover:opacity-50" : 'shadow-xl'} cursor-pointer transition`}
                 />
             </div>
         );
     } else {
         return (
-            <div key={movie?.title} className={`flex-shrink-0 w-48 flex flex-col gap-2 items-center justify-center h-fit overflow-hidden transition ${full ? '' : "scale-100"}`}>
+            <div key={movie?.title} className={`flex-shrink-0 w-48 select-none flex flex-col gap-2 items-center justify-center h-fit overflow-hidden transition ${full ? '' : "scale-100"}`}>
                 <img
                     src={`${cdnUrl}${movie.title}.jpg`}
                     draggable={false}
@@ -57,24 +53,12 @@ export const Title = ({
                         target.onerror = null; // Prevent looping
                         e.currentTarget.src = `${cdnUrl}fallbackImage.jpg`;
                     }}
-                    className={`w-full aspect-[3/4] object-fill overflow-hidden mb-2 rounded-lg ${full ? "hover:opacity-50" : 'shadow-xl'} cursor-pointer transition`}
+                    className={`w-full aspect-[3/4] object-fill overflow-hidden select-none mb-2 rounded-lg ${full ? "hover:opacity-50" : 'shadow-xl'} cursor-pointer transition`}
                 />
                 {full && (
-                    <div className="flex flex-row gap-2 items-start justify-between w-full">
-                        <div className="flex flex-col gap-1">
-                            <h2 onClick={handleClick} className="text-md text-ellipsis cursor-pointer text-wrap line-clamp-2 overflow-clip text-white">{movie.title}</h2>
-                            {/* <div className="flex flex-row gap-1 items-center justify-start">
-                                {movie.random_rating && (
-                                    <>
-                                        {Array.from({ length: numFullStar }).map((_, index) => (
-                                            <FaStar key={`full-${index}`} size={15} className="text-[#F4AC45]" />
-                                        ))}
-                                        {Array.from({ length: numEmptyStar }).map((_, index) => (
-                                            <FaStar key={`empty-${index}`} size={15} className="text-[#969696]" />
-                                        ))}
-                                    </>
-                                )}
-                            </div> */}
+                    <div className="flex flex-row gap-2 items-start select-none justify-between w-full">
+                        <div className="flex flex-col select-none gap-1">
+                            <h2 onClick={handleClick} className="text-md text-ellipsis select-none cursor-pointer text-wrap line-clamp-2 overflow-clip text-white">{movie.title}</h2>
                         </div>
                         <Heart
                             show_id={movie.show_id}

@@ -28,12 +28,12 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
             return (
               <div
                 onClick={isLogginIn ? handleLogout : handleLogin}
-                className="flex flex-row justify-center items-center hover:bg-black/20 py-2 px-4 my-2 rounded-[7px] gap-2 cursor-pointer transition"
+                className="flex flex-row select-none justify-center items-center hover:bg-black/20 py-2 px-4 my-2 rounded-[7px] gap-2 cursor-pointer transition"
               >
-                <div className="flex lg:hidden xl:flex hover:text-shadow-lg">
+                <div className="flex select-none lg:hidden xl:flex hover:text-shadow-lg">
                   {icon}
                 </div>
-                <div className="hidden lg:flex xl:flex group-hover:text-[#EA8C55] transition">
+                <div className="hidden select-none lg:flex xl:flex group-hover:text-[#EA8C55] transition">
                   <p>{isLogginIn ? text : "Log In"}</p>
                 </div>
               </div>
@@ -42,10 +42,10 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
             return (
               <Link
                 to={link ?? ""}
-                className="flex flex-row justify-center items-center hover:bg-black/20 py-2 px-4 my-2 rounded-[7px] gap-2 cursor-pointer transition"
+                className="flex flex-row select-none justify-center items-center hover:bg-black/20 py-2 px-4 my-2 rounded-[7px] gap-2 cursor-pointer transition"
               >
-                <div className="flex lg:hidden xl:flex">{icon}</div>
-                <div className="hidden lg:flex xl:flex">
+                <div className="flex select-none lg:hidden xl:flex">{icon}</div>
+                <div className="hidden select-none lg:flex xl:flex">
                   <p>{text}</p>
                 </div>
               </Link>
@@ -55,46 +55,46 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
 
     const headerLinks = [
         {
-            icon: <FiTv className="text-zinc-100" />,
+            icon: <FiTv className="text-zinc-100 select-none" />,
             text: "Tv Shows",
             link: "/tv-shows"
         },
         {
-            icon: <TbMovie size={20} className="text-zinc-100" />,
+            icon: <TbMovie size={20} className="text-zinc-100 select-none" />,
             text: "Movies",
             link: "/movies"
         },
         {
-            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] transition" />,
+            icon: <LuLogOut size={19} className="text-zinc-100 select-none group-hover:text-[#EA8C55] transition" />,
             text: "Log Out",
         },
     ];
 
     const adminLinks = [
         {
-            icon: <FiTv className="text-zinc-100" />,
+            icon: <FiTv className="text-zinc-100 select-none" />,
             text: "Tv Shows",
             link: "/tv-shows"
         },
         {
-            icon: <TbMovie size={20} className="text-zinc-100" />,
+            icon: <TbMovie size={20} className="text-zinc-100 select-none" />,
             text: "Movies",
             link: "/movies"
         },
         {
-            icon: <BsFillPersonFill size={19} className="text-zinc-100" />,
+            icon: <BsFillPersonFill size={19} className="text-zinc-100 select-none" />,
             text: "Admin",
             link: "/admin"
         },
         {
-            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] transition" />,
+            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] select-none transition" />,
             text: "Log Out",
         },
     ];
 
     const loggedOutLinks = [
         {
-            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] transition" />,
+            icon: <LuLogOut size={19} className="text-zinc-100 group-hover:text-[#EA8C55] select-none transition" />,
             text: "Log In",
             link: '',
         }

@@ -219,6 +219,7 @@ export const Home = () => {
                     <img
                         src={`https://cdn.spotparking.app/public/posters/All American.jpg`}
                         alt={'All American'}
+                        draggable={false}
                         onError={(e) => {
                             const target = e.target as HTMLImageElement
                             target.onerror = null

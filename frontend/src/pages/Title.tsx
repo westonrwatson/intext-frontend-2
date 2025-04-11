@@ -103,12 +103,13 @@ export const Title = () => {
                 <img
                     src={`https://cdn.spotparking.app/public/posters/${title?.title}.jpg`}
                     alt={title?.title}
+                    draggable={false}
                     onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.onerror = null;
                         target.src = "https://cdn.spotparking.app/public/posters/fallbackImage.jpg";
                     }}
-                    className="w-full object-cover aspect-video object-top"
+                    className="w-full object-cover aspect-video object-top select-none"
                 />
 
                 <div className='absolute bottom-14 left-14 lg:bottom-20 lg:left-20 2xl:bottom-32 2xl:left-32 flex flex-col gap-5 z-20 w-1/2 no-scrollbar'>
@@ -118,15 +119,15 @@ export const Title = () => {
                             <p className='font-light text-lg'>{title?.genres.join(', ')}</p>
                         </div>
 
-                        <p className='font-semibold text-4xl lg:text-6xl text-shadow-lg text-wrap'>{title?.title}</p>
+                        <p className='font-semibold text-4xl lg:text-6xl text-shadow-lg text-wrap select-none'>{title?.title}</p>
 
-                        <div className='flex flex-row justify-start text-[#ababab] text-shadow-md items-center'>
-                            <p className='text-lg bg-[#383838] p-1 px-2 font-medium rounded mr-6'>{title?.rating}</p>
-                            <p className='font-light text-lg'>{title?.release_year}</p>
-                            <p className='text-lg font-medium px-3'>{title?.type === "Movie" && "•"}</p>
-                            <p className='font-light text-lg'>{title?.type === 'Movie' && getDurationFromMinutes(title?.duration ?? '0')}</p>
+                        <div className='flex flex-row justify-start text-[#ababab] text-shadow-md items-center select-none'>
+                            <p className='text-lg bg-[#383838] p-1 px-2 font-medium rounded mr-6 select-none'>{title?.rating}</p>
+                            <p className='font-light text-lg select-none'>{title?.release_year}</p>
+                            <p className='text-lg font-medium px-3 select-none'>{title?.type === "Movie" && "•"}</p>
+                            <p className='font-light text-lg select-none'>{title?.type === 'Movie' && getDurationFromMinutes(title?.duration ?? '0')}</p>
                         </div>
-                        <p className='font-light text-md lg:text-lg text-gray-200 text-shadow-lg w-3/4'>{title?.description}</p>
+                        <p className='font-light text-md lg:text-lg text-gray-200 text-shadow-lg w-3/4 select-none'>{title?.description}</p>
                     </div>
 
                     {/* Action Buttons */}
@@ -146,7 +147,7 @@ export const Title = () => {
                         >
                             <p className='group-hover:text-gray-100 text-lg px-2'>Trailer</p>
                         </div>
-                        <Heart show_id={title?.show_id ?? ''} />
+                        <Heart show_id={title?.show_id ?? ''}  />
                     </div>
 
                     {/* Ratings */}
