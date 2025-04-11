@@ -5,7 +5,6 @@ const IS_PROD = import.meta.env.MODE === 'production';
 export const fetchData = async ({ path }: { path: string; prod?: boolean }): Promise<any> => {
     const jwt = localStorage.getItem('jwt');
     const fullPath = `${IS_PROD ? PROD_URL : DEV_URL}${path}`;
-
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': jwt ? `Bearer ${jwt}` : '',

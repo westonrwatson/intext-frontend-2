@@ -1,5 +1,6 @@
 import { FaHeart } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
+import { Heart } from "./Heart";
 
 export const Title = ({
     movie,
@@ -75,9 +76,11 @@ export const Title = ({
                                 )}
                             </div> */}
                         </div>
-                        <div className="flex items-center cursor-pointer justify-center rounded-full ml-2 py-1 px-3 border border-[#F25F5D] group hover:bg-[#F25F5D] transition">
-                            <FaHeart size={15} className="text-[#F25F5D] group-hover:text-[#191919]" />
-                        </div>
+                        <Heart
+                            show_id={movie.show_id}
+                            className={'py-1 px-3'}
+                            size={18}
+                        />
                     </div>
                 )}
             </div>
