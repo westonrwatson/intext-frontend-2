@@ -6,6 +6,6 @@
     }
   },
   "globalHeaders": {
-    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://cdn.spotparking.app data:; font-src 'self'; connect-src 'self' https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net; frame-ancestors 'none'; object-src 'none'; base-uri 'self';"
+    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://cdn.spotparking.app https://img.icons8.com data:; font-src 'self'; connect-src 'self' https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net https://inrnyartmickubjmvefw.supabase.co; frame-ancestors 'none'; object-src 'none'; base-uri 'self';"
   }
 }
