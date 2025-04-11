@@ -153,7 +153,7 @@ export const Login = () => {
                         <button
                             type="submit"
                             onClick={handleSubmit}
-                            className="text-2xl px-8 mt-2 py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white font-semibold rounded-full transition cursor-pointer"
+                            className="text-2xl px-8 mt-2 py-2 bg-[#EA8C55] hover:bg-[#8C5433] text-white rounded-full transition cursor-pointer"
                         >
                             Login
                         </button>
