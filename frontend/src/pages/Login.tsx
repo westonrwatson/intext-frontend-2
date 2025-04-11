@@ -98,7 +98,7 @@ export const Login = () => {
     };
 
     const handleGoogleSignIn = async () => {
-        const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net' : 'http://localhost:5173'}`;
+        const url = `${IS_PROD ? 'https://cineniche.info' : 'http://localhost:5173'}`;
 
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
