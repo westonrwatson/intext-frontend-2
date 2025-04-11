@@ -242,24 +242,41 @@ export const Home = () => {
                     )}
                     <div className="pointer-events-none absolute top-0 left-0 h-full w-full opacity-50 bg-gradient-to-r from-[#191919] to-transparent z-0" />
                     <div className="pointer-events-none absolute right-0 bottom-0 h-48 w-full bg-gradient-to-t from-[#191919] to-transparent" />
+                    <Arrow height={400} />
                 </div>
 
+                <span id="scroll-target" className="block h-11"></span>
                 <Section movies={recommendedTitles} title="Recommended for You" />
 
                 <div className="w-screen relative overflow-hidden bg-[#050505] pb-10 pt-6 shadow-lg">
                     <h2 className="text-2xl text-zinc-100 font-bold mb-4 px-8">Genres</h2>
 
-                    {/* Scrollable grid with 2 rows */}
+                    {/* Scrollable grid with 1 row */}
                     <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
-                        {allGenres.map((genre, index) => (
-                            <div
-                                key={index}
-                                className="bg-[#383838] text-white px-6 py-8 rounded-lg text-center min-w-[150px] flex hover:bg-[#191919] items-center justify-center text-xl max-w-96 cursor-pointer text-wrap transition"
-                            >
-                                {genre}
-                            </div>
-                        ))}
+                    {allGenres.map((genre, index) => {
+                        const lowerGenre = genre.toLowerCase()
+                        const isTVGenre = lowerGenre.includes("tv show") || lowerGenre.includes("tv")
+                        const targetPath = isTVGenre ? "/tv-shows" : "/movies"
+                        const encodedGenre = encodeURIComponent(genre)
+
+                        return (
+                        <button
+                            key={index}
+                            type="button"
+                            onClick={() => {
+                            window.location.href = `${targetPath}?genre=${encodedGenre}#scroll-target`
+                            }}
+                            className="bg-[#383838] text-white px-6 py-8 rounded-lg text-center min-w-[150px] flex hover:bg-[#191919] items-center justify-center text-xl max-w-96 cursor-pointer text-wrap transition"
+                            role="link"
+                            aria-label={`Go to ${genre} titles`}
+                        >
+                            {genre}
+                        </button>
+                        )
+                    })}
                     </div>
+
+
 
                     {/* Right fade */}
                     <div className="pointer-events-none absolute left-0 top-0 h-full w-8 bg-gradient-to-r from-[#050505] to-transparent z-10" />
@@ -342,8 +359,8 @@ export const Home = () => {
                 <div className="flex flex-col items-center justify-center w-full overflow-hidden text-white gap-4 relative">
 
                     <div className='absolute top-1/2 -translate-y-1/2 flex flex-col justify-center items-center gap-6 z-20'>
-                        <p className='text-[55px] text-center text-shadow-lg font-bold text-white select-none'>Rediscover Film. Curated Classics,</p>
-                        <p className='text-[55px] text-center text-shadow-lg font-bold text-white select-none -mt-10'>Hidden Gems, Indie Gold.</p>
+                        <p className='text-[60px] text-center text-shadow-lg font-bold text-white select-none'>Forgotten films</p>
+                        <p className='text-[60px] text-center text-shadow-lg font-bold text-white select-none -mt-10'>brought into the limelight</p>
                         <a href='/sign-up' draggable={false} className='text-xl text-white bg-[#503047] py-4 px-9 rounded-full font-light hover:bg-[#402639] transition cursor-pointer select-none'>Start Watching Now</a>
                     </div>
 
