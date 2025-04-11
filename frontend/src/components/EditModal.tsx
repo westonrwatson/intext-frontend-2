@@ -210,7 +210,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="text"
                             id="director"
-                            value={newTitle?.director}
+                            value={typeof newTitle?.director === 'object' ? "N/A" : newTitle?.director}
                             onChange={(e) => setNewTitle({ ...newTitle, director: e.target.value } as Title)}
                             onBlur={(e) => { title && handleFieldChange("director") }}
                             className="mt-1 block w-full border-2 border-[#383838] rounded-md p-2 h-10 outline-[#E8AF58]"
@@ -234,7 +234,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="text"
                             id="country"
-                            value={newTitle?.country}
+                            value={typeof newTitle?.country === 'object' ? "N/A" : newTitle?.country}
                             onChange={(e) => setNewTitle({ ...newTitle, country: e.target.value } as Title)}
                             onBlur={(e) => { title && handleFieldChange("country") }}
                             className="mt-1 block w-full border-2 border-[#383838] rounded-md p-2 h-10 outline-[#E8AF58]"

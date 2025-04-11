@@ -64,8 +64,7 @@ export default function Callback() {
                     setLogin(true)
                     setUser({
                         user_id: responseData.user_id,
-                        name: responseData.name,
-                        email: data.session.user.email || ''
+                        admin: responseData.admin,
                     })
                     if (responseData.admin === true) {
                         setAdmin(true)

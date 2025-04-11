@@ -22,12 +22,12 @@ export const Login = () => {
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
-        })
+        });
 
         if (error) {
             setErrorMessage("Invalid email or password");
             return;
-        }
+        };
 
         if (data.user) {
             // Check database
@@ -39,7 +39,7 @@ export const Login = () => {
         if (!data.user) {
             setErrorMessage("Unable to log in.");
             return;
-        }
+        };
 
         try {
             const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net/' : 'http://localhost:5016/'}`;
@@ -51,15 +51,15 @@ export const Login = () => {
                 body: JSON.stringify({ email }),
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to contact backend.");
-            }
+            if (!response.ok) throw new Error("Failed to contact backend.");
 
             const responseData = await response.json();
-            console.log('✅ Backend response:', responseData);
 
             if (responseData.exists) {
-                setUser(responseData.user);
+                setUser({
+                    user_id: responseData.user_id,
+                    admin: responseData.admin,
+                });
 
                 setLogin(true);
                 if (responseData.admin) {
@@ -74,7 +74,7 @@ export const Login = () => {
         } catch (err) {
             console.error("Backend check failed:", err);
             setErrorMessage("An error occurred while logging in.");
-        }
+        };
     };
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -91,16 +91,15 @@ export const Login = () => {
         if (!validatePassword(password)) {
             setErrorMessage("Password must be at least 12 characters long");
             return;
-        }
+        };
 
         validateLogin(email, password);
     };
 
     const handleGoogleSignIn = async () => {
-
         const url = `${IS_PROD ? 'https://intex-backend-2-fre9fjaxgfevfvee.centralus-01.azurewebsites.net' : 'http://localhost:5173'}`;
 
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: `${url}/callback`,
@@ -110,7 +109,7 @@ export const Login = () => {
         if (error) {
             console.error('Google sign-in error:', error.message)
             setErrorMessage('Failed to sign in with Google.')
-        }
+        };
     };
 
     return (

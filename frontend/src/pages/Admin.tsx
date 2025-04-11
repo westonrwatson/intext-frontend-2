@@ -77,6 +77,8 @@ export default function Admin() {
                 return 0;
             });
 
+            console.log(newBuild)
+
             setData(newBuild);
         } else {
             console.error('Failed to fetch data');
@@ -314,8 +316,8 @@ export default function Admin() {
                                     <td className="border border-[#191919] text-left font-light px-4 py-2">{Array.isArray(item.genres) ? item.genres.join(", ") : ""}</td>
                                     <td className="border border-[#191919] text-left font-light px-4 py-2">{item.duration}</td>
                                     <td className="border border-[#191919] text-left font-light px-4 py-2">{item.rating}</td>
-                                    <td className="border border-[#191919] text-left font-light px-4 py-2">{typeof item.country === 'object' ? "" : item.country}</td>
-                                    <td className="border border-[#191919] text-left font-light px-4 py-2">{typeof item.director === 'object' ? '' : item.director}</td>
+                                    <td className="border border-[#191919] text-left font-light px-4 py-2">{typeof item.country === 'object' ? "N/A" : item.country}</td>
+                                    <td className="border border-[#191919] text-left font-light px-4 py-2">{typeof item.director === 'object' ? 'N/A' : item.director}</td>
                                 </tr>
                             ))}
                         </tbody>
