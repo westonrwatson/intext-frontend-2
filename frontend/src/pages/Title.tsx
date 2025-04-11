@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { FaPlay } from "react-icons/fa";
 import { genres } from '../utils/genres';
-import { FaHeart, FaStar } from "react-icons/fa6";
+import { FaStar } from "react-icons/fa6";
 import { Tomato } from '../components/tomato';
 import { Imdb } from '../components/imdb';
 import { fetchData, postData } from '../components/fetcher';
 import { Section } from '../components/Section';
 import { useAuthStore } from '../utils/useAuthStore';
-import LikedMovies from '../utils/likedMovies';
 import Arrow from '../components/Arrow';
+import { Heart } from '../components/Heart';
 
 export const Title = () => {
     const { user } = useAuthStore(); // ✅ Now has user object & login status
@@ -96,36 +96,6 @@ export const Title = () => {
 
         fetchMovieData();
     }, []);
-
-    const Heart = ({ show_id }: { show_id: string }) => {
-        const [liked, setLiked] = useState(false);
-
-        const getStatus = async () => {
-            const liked = await LikedMovies.checkIfLiked(show_id);
-            setLiked(liked);
-        }
-
-        const handleClick = async () => {
-            if (liked) {
-                await LikedMovies.removeFromLikedMovies(show_id);
-            } else {
-                await LikedMovies.addToLikedMovies(show_id);
-            }
-            setLiked(!liked);
-        };
-
-        useEffect(() => {
-            getStatus();
-        }, [liked]);
-
-        return (
-            <div
-                onClick={handleClick}
-                className={`flex items-center ${liked ? 'bg-[#F25F5D] hover:bg-[#d44e4c]' : 'bg-transparent'} cursor-pointer backdrop-blur-sm justify-center rounded-full h-12 w-12 px-3 border border-[#F25F5D] group hover:bg-[#F25F5D] transition`}>
-                <FaHeart size={24} className={`${liked ? 'text-[#191919]' : ' text-[#F25F5D]'} group-hover:text-[#191919]`} />
-            </div>
-        );
-    };
 
     return (
         <div className="flex flex-col gap-4 justify-start items-center w-full min-h-screen bg-[#191919] text-white text-sm z-50 no-scrollbar overflow-auto pb-10 mb-8">

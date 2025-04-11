@@ -232,7 +232,10 @@ export const Home = () => {
                             <p className='font-semibold text-6xl text-shadow-lg'>{recentlyAdded?.title}</p>
                             <p className='font-light text-md text-gray-200 text-shadow-lg'>{recentlyAdded?.genres.join(", ")}</p>
 
-                            <div className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 py-2 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'>
+                            <div
+                                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", '_blank')}
+                                className='flex flex-row gap-2 w-fit items-center justify-between bg-[#EA8C55] rounded-full px-3 py-2 cursor-pointer group hover:shadow-lg transition hover:bg-[#BA6D40]'
+                            >
                                 <div className='bg-[#AF6A42] group-hover:bg-[#8C5433] rounded-full w-8 h-8 flex justify-center items-center'>
                                     <FaPlay size={16} className="text-zinc-100" />
                                 </div>
@@ -253,27 +256,27 @@ export const Home = () => {
 
                     {/* Scrollable grid with 1 row */}
                     <div className="grid grid-rows-1 auto-cols-max grid-flow-col gap-4 px-8 overflow-x-auto no-scrollbar pr-12">
-                    {allGenres.map((genre, index) => {
-                        const lowerGenre = genre.toLowerCase()
-                        const isTVGenre = lowerGenre.includes("tv show") || lowerGenre.includes("tv")
-                        const targetPath = isTVGenre ? "/tv-shows" : "/movies"
-                        const encodedGenre = encodeURIComponent(genre)
+                        {allGenres.map((genre, index) => {
+                            const lowerGenre = genre.toLowerCase()
+                            const isTVGenre = lowerGenre.includes("tv show") || lowerGenre.includes("tv")
+                            const targetPath = isTVGenre ? "/tv-shows" : "/movies"
+                            const encodedGenre = encodeURIComponent(genre)
 
-                        return (
-                        <button
-                            key={index}
-                            type="button"
-                            onClick={() => {
-                            window.location.href = `${targetPath}?genre=${encodedGenre}#scroll-target`
-                            }}
-                            className="bg-[#383838] text-white px-6 py-8 rounded-lg text-center min-w-[150px] flex hover:bg-[#191919] items-center justify-center text-xl max-w-96 cursor-pointer text-wrap transition"
-                            role="link"
-                            aria-label={`Go to ${genre} titles`}
-                        >
-                            {genre}
-                        </button>
-                        )
-                    })}
+                            return (
+                                <button
+                                    key={index}
+                                    type="button"
+                                    onClick={() => {
+                                        window.location.href = `${targetPath}?genre=${encodedGenre}#scroll-target`
+                                    }}
+                                    className="bg-[#383838] text-white px-6 py-8 rounded-lg text-center min-w-[150px] flex hover:bg-[#191919] items-center justify-center text-xl max-w-96 cursor-pointer text-wrap transition"
+                                    role="link"
+                                    aria-label={`Go to ${genre} titles`}
+                                >
+                                    {genre}
+                                </button>
+                            )
+                        })}
                     </div>
 
 
