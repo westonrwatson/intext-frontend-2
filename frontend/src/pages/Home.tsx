@@ -19,7 +19,6 @@ export const Home = () => {
     const [allMovies, setAllMovies] = useState<Title[]>([])
     const [allScrollingMovies, setAllScrollingMovies] = useState<string[]>([])
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-    const {user} = useAuthStore();
 
     const getScrollingMovies = async () => {
         const response = await fetchData({ path: 'titles?countOnly=true&count=150' })
@@ -132,7 +131,7 @@ export const Home = () => {
     const [list3, setList3] = useState<Title[]>([]); // Dramas
     const [list4, setList4] = useState<Title[]>([]); // Horror Movies
     const params = new URLSearchParams(window.location.search);
-    const userId = user?.user_id.toString() || "1"; // fallback default if needed
+    const userId = params.get('user_id') || "1"; // fallback default if needed
 
     const getUserRecommendations = async (userId: string) => {
         const response = await fetchData({ path: `user-recommendations?user_id=${userId}&genre=Fantasy&genre=Comedies&genre=Dramas&genre=Horror%20Movies` });
