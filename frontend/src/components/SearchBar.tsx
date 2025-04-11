@@ -7,7 +7,6 @@ import React, {
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FiSearch } from 'react-icons/fi'
-import Fuse from 'fuse.js'
 import { fetchData } from './fetcher'
 
 type SearchItem = {
@@ -26,7 +25,6 @@ type Props = {
 const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, shouldHighlight }, ref) => {
     const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [fuse, setFuse] = useState<Fuse<SearchItem> | null>(null);
     const navigate = useNavigate();
     const [query, setQuery] = useState('')
 
@@ -92,12 +90,8 @@ const SearchBar = forwardRef<HTMLInputElement, Props>(({ setSearchActive, should
     }, [query])
 
     useEffect(() => {
-        const selectedEl = document.querySelector(
-            `.search-result-item[data-idx="${selectedIndex}"]`
-        )
-        if (selectedEl) {
-            selectedEl.scrollIntoView({ block: 'nearest' })
-        }
+        const selectedEl = document.querySelector(`.search-result-item[data-idx="${selectedIndex}"]`)
+        if (selectedEl) selectedEl.scrollIntoView({ block: 'nearest' })
     }, [selectedIndex])
 
     useEffect(() => {

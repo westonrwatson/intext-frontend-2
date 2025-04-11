@@ -6,6 +6,10 @@ export const fetchData = async ({ path }: { path: string; prod?: boolean }): Pro
     const jwt = localStorage.getItem('jwt');
     const fullPath = `${IS_PROD ? PROD_URL : DEV_URL}${path}`;
 
+    console.log(fullPath)
+
+    console.log(jwt)
+
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': jwt ? `Bearer ${jwt}` : '',
