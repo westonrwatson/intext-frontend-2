@@ -137,6 +137,8 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
             return acc;
         }, {} as Partial<typeof emptyObj>);
 
+        console.log("New Title Data:", newTitleData);
+
         try {
             console.log("📤 Sending:", newTitleData);
             const response = await postData({
@@ -164,6 +166,16 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
         }
     };
 
+    const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target;
+        setNewTitle((prevTitle) => ({
+            ...prevTitle,
+            type: value,
+        } as Title));
+
+        handleFieldChange("type");
+    };
+
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#00000050]">
             <div className="bg-[#191919] text-[#ABABAB] rounded-lg shadow-lg p-8 w-full max-w-xl gap-5 flex flex-col">
@@ -177,8 +189,8 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                                 value="Movie"
                                 className="text-nowrap w-fit accent-[#E8AF58]"
                                 checked={newTitle?.type === "Movie"}
-                                onChange={() => { title ? handleFieldChange("type") : setNewTitle({ ...newTitle, type: "Movie" } as Title) }}
-                            />
+                                onChange={(e) => { title ? handleTypeChange(e) : setNewTitle({ ...newTitle, type: "Movie" } as Title) }}
+                                />
                             Movie
                         </label>
                         <label className="flex flex-row gap-2 text-nowrap">
@@ -187,7 +199,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                                 value="TV Show"
                                 className="text-nowrap w-fit accent-[#E8AF58]"
                                 checked={newTitle?.type === "TV Show"}
-                                onChange={() => { title ? handleFieldChange("type") : setNewTitle({ ...newTitle, type: "TV Show" } as Title) }}
+                                onChange={(e) => { title ? handleTypeChange(e) : setNewTitle({ ...newTitle, type: "TV Show" } as Title) }}
                             />
                             TV Show
                         </label>
@@ -198,6 +210,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                     <input
                         type="text"
                         id="title"
+                        placeholder="Title"
                         value={newTitle?.title}
                         onChange={(e) => setNewTitle({ ...newTitle, title: e.target.value } as Title)}
                         onBlur={(e) => { title && handleFieldChange("title") }}
@@ -210,6 +223,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="text"
                             id="director"
+                            placeholder="Director"
                             value={typeof newTitle?.director === 'object' ? "N/A" : newTitle?.director}
                             onChange={(e) => setNewTitle({ ...newTitle, director: e.target.value } as Title)}
                             onBlur={(e) => { title && handleFieldChange("director") }}
@@ -221,6 +235,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="text"
                             id="cast"
+                            placeholder="Cast"
                             value={newTitle?.cast}
                             onChange={(e) => setNewTitle({ ...newTitle, cast: e.target.value } as Title)}
                             onBlur={(e) => { title && handleFieldChange("cast") }}
@@ -234,6 +249,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="text"
                             id="country"
+                            placeholder="Country"
                             value={typeof newTitle?.country === 'object' ? "N/A" : newTitle?.country}
                             onChange={(e) => setNewTitle({ ...newTitle, country: e.target.value } as Title)}
                             onBlur={(e) => { title && handleFieldChange("country") }}
@@ -245,6 +261,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="number"
                             id="releaseYear"
+                            placeholder="Release Year"
                             value={newTitle?.release_year}
                             onChange={(e) => setNewTitle({ ...newTitle, release_year: e.target.value } as Title)}
                             onBlur={(e) => { title && handleFieldChange("release_year") }}
@@ -284,6 +301,7 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         <input
                             type="number"
                             id="duration"
+                            placeholder="Duration"
                             value={newTitle?.duration?.split(" ")[0] || ""}
                             onChange={(e) => setNewTitle({ ...newTitle, duration: `${e.target.value} min` } as Title)}
                             onBlur={(e) => { title && handleFieldChange("duration") }}
@@ -299,7 +317,8 @@ export const EditModal = ({ title, setTitle, setModalOpen }: {
                         value={newTitle?.description}
                         onChange={(e) => setNewTitle({ ...newTitle, description: e.target.value } as Title)}
                         onBlur={(e) => { title && handleFieldChange("description") }}
-                        className="mt-1 block w-full border-2 border-[#383838] rounded-md p-2 h-24"
+                        className="mt-1 block w-full border-2 border-[#383838] rounded-md focus:outline-[#E8AF58] p-2 h-24 outline-[#E8AF58]"
+                        placeholder="Description"
                     />
                 </div>
 

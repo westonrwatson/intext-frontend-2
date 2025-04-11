@@ -115,7 +115,7 @@ export default function Admin() {
                 pageNumber: pageNumber,
                 filters
             });
-        };
+        }
     }, [pageSize, sortBy, sortOrder, type, genre, searchQuery, pageNumber, showEditModal]);
 
     useEffect(() => {
@@ -286,13 +286,13 @@ export default function Admin() {
                         <tbody>
                             {data.map((item, index) => (
                                 <tr key={item.show_id || item.title} className='text-[#ABABAB] hover:bg-[#383838] transition-all duration-200'>
-                                    <td className="border border-[#191919] text-left font-light px-4 py-2">
+                                    <td className="border border-[#191919] text-left font-light flex justify-center items-center px-4 py-2">
                                         <div
                                             onClick={() => {
                                                 setActiveTitle(item);
                                                 setShowEditModal(true);
                                             }}
-                                            className="bg-[#333] text-white p-2 rounded-lg hover:bg-[#444] transition-all duration-200 shadow-md cursor-pointer"
+                                            className="bg-[#333] text-white p-2 rounded-lg max-w-32 flex justify-center items-center hover:bg-[#444] transition-all duration-200 shadow-md cursor-pointer"
                                         >
                                             <BiSolidPencil size={20} className="text-[#ABABAB] text-2xl" />
                                         </div>
