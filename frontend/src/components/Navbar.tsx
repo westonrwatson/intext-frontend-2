@@ -26,25 +26,29 @@ export const Navbar = forwardRef<HTMLInputElement, { setSearchActive: (value: bo
     const HeaderLink = ({ icon, text, link }: { icon: any, text: string, link?: string }) => {
         if (!link) {
             return (
-                <div onClick={isLogginIn ? handleLogout : handleLogin} className="flex flex-row justify-center items-center group p-2 my-2 rounded gap-2 cursor-pointer transition">
-                    <div className="flex lg:hidden xl:flex hover:text-shadow-lg">
-                        {icon}
-                    </div>
-                    <div className="hidden lg:flex xl:flex group-hover:text-[#EA8C55] transition">
-                        <p>{isLogginIn ? text : 'Log In'}</p>
-                    </div>
+              <div
+                onClick={isLogginIn ? handleLogout : handleLogin}
+                className="flex flex-row justify-center items-center hover:bg-black/20 py-2 px-4 my-2 rounded-[7px] gap-2 cursor-pointer transition"
+              >
+                <div className="flex lg:hidden xl:flex hover:text-shadow-lg">
+                  {icon}
                 </div>
+                <div className="hidden lg:flex xl:flex group-hover:text-[#EA8C55] transition">
+                  <p>{isLogginIn ? text : "Log In"}</p>
+                </div>
+              </div>
             );
         } else {
             return (
-                <Link to={link ?? ''} className="flex flex-row justify-center items-center hover:bg-zinc-800 p-2 my-2 rounded gap-2 cursor-pointer transition">
-                    <div className="flex lg:hidden xl:flex">
-                        {icon}
-                    </div>
-                    <div className="hidden lg:flex xl:flex">
-                        <p>{text}</p>
-                    </div>
-                </Link>
+              <Link
+                to={link ?? ""}
+                className="flex flex-row justify-center items-center hover:bg-black/20 py-2 px-4 my-2 rounded-[7px] gap-2 cursor-pointer transition"
+              >
+                <div className="flex lg:hidden xl:flex">{icon}</div>
+                <div className="hidden lg:flex xl:flex">
+                  <p>{text}</p>
+                </div>
+              </Link>
             );
         }
     };

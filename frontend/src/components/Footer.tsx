@@ -21,9 +21,6 @@ export const Footer = () => {
                         <Link to="/movies" draggable={false} className="text-white font-extralight hover:text-gray-400 transition">
                             Movies
                         </Link>
-                        <Link to="/account" draggable={false} className="text-white font-extralight hover:text-gray-400 transition">
-                            Account
-                        </Link>
                     </>
                 )}
             </div>
